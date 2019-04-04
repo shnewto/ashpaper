@@ -1,0 +1,12 @@
+[package]
+name = "ash_paper"
+version = "0.1.0"
+authors = ["Shea Newton <shnewto@gmail.com>"]
+edition = "2018"
+
+[lib]
+name = "ash_paper"
+path = "src/lib.rs"
+
+[dependencies]
+wordsworth = "0.1.*"

@@ -1,0 +1,11 @@
+[package]
+name = "example"
+version = "0.1.0"
+authors = ["Shea Newton <sheanewt@gmail.com>"]
+
+[lib]
+name = "example"
+path = "src/main.rs"
+
+[dependencies.ash_paper]
+path = ".."
