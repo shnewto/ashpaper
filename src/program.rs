@@ -19,39 +19,14 @@ impl Default for Memory {
     }
 }
 
-#[derive(Default)]
-pub struct Input {
-    tokens: String,
-}
-
-impl Input {
-    /// Construct a new `Input`
-    fn new() -> Input {
-        Input {
-            ..Default::default()
-        }
-    }
-
-    // Get `Input` by parsing a string
-    fn from_str(s: &str) -> Input {
-        Input {
-            tokens: String::from(s),
-        }
-    }
-}
-
-impl fmt::Display for Input {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}\n", self.tokens)
-    }
-}
+type Insctructions = String;
 
 pub struct Iter<'a> {
-    iterator: slice::Iter<'a, Input>,
+    iterator: slice::Iter<'a, Insctructions>,
 }
 
 impl<'a> Iterator for Iter<'a> {
-    type Item = &'a Input;
+    type Item = &'a Insctructions;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.iterator.next()
@@ -59,11 +34,11 @@ impl<'a> Iterator for Iter<'a> {
 }
 
 pub struct IterMut<'a> {
-    iterator: slice::IterMut<'a, Input>,
+    iterator: slice::IterMut<'a, Insctructions>,
 }
 
 impl<'a> Iterator for IterMut<'a> {
-    type Item = &'a mut Input;
+    type Item = &'a mut Insctructions;
 
     fn next(&mut self) -> Option<Self::Item> {
         self.iterator.next()
@@ -78,10 +53,10 @@ impl Program {
         }
     }
 
-    /// Construct an `Program` from `Input`s
-    fn from_parts(v: Vec<Input>) -> Program {
+    /// Construct an `Program` from `Insctructions`s
+    fn from_parts(v: Vec<Insctructions>) -> Program {
         Program {
-            input: v,
+            instructions: v,
             ..Default::default()
         }
     }
@@ -89,7 +64,7 @@ impl Program {
     // Get `Program` by parsing a string
     pub fn from_str(s: &str) -> Program {
         Program {
-            input: s.lines().map(|l| Input::from_str(l)).collect::<Vec<_>>(),
+            instructions: s.lines().map(|i| String::from(i)).collect::<Vec<String>>(),
             ..Default::default()
         }
     }
@@ -97,14 +72,14 @@ impl Program {
     /// Get iterator of the `Program`
     pub fn iter(&self) -> Iter {
         Iter {
-            iterator: self.input.iter(),
+            iterator: self.instructions.iter(),
         }
     }
 
     /// Get mutable iterator of the `Production`
     pub fn iter_mut(&mut self) -> IterMut {
         IterMut {
-            iterator: self.input.iter_mut(),
+            iterator: self.instructions.iter_mut(),
         }
     }
 }
@@ -114,7 +89,7 @@ impl fmt::Display for Program {
         write!(
             f,
             "{}",
-            self.input
+            self.instructions
                 .iter()
                 .map(|s| s.to_string())
                 .collect::<Vec<_>>()
@@ -124,7 +99,7 @@ impl fmt::Display for Program {
 }
 
 #[derive(Clone, Debug)]
-pub enum Instruction {
+pub enum Command {
     GOTOIF,
     STORE,
     NEGATE,
@@ -150,41 +125,40 @@ struct Memory {
 
 #[derive(Default)]
 pub struct Program {
-    input: Vec<Input>,
+    instructions: Vec<Insctructions>,
     memory: Memory,
     execution_index: u64,
     output: String,
 }
 
-// input file is called instructions!
-pub fn interpret(input: &str) -> Program {
-    let mut program = Program::from_str(input);
-    for input in program.iter_mut() {
-        println!("|{}|", input);
-        match parsers::register(input.tokens.as_bytes()) {
+pub fn execute(instructions: &str) -> Program {
+    let mut program = Program::from_str(instructions);
+    for (i, instruction) in program.iter_mut().enumerate() {
+        println!("|{}|", instruction);
+        match parsers::register(instruction.as_bytes()) {
             Ok((_, Register::Register1)) => {
-                println!("r1:\n{}", input);
+                println!("r1:\n{}", instruction);
             }
 
             Ok((_, Register::Register2)) => {
-                println!("r2:\n{}", input);
+                println!("r2:\n{}", instruction);
             }
-            Err(e) => println!("??:\n{} -- {}", input, e),
+            Err(e) => println!("??:\n{} -- {}", instruction, e),
         }
     }
 
     program
 }
 
-fn interpret_line(input: Input) -> Instruction {
-    let syllables = wordsworth::syllable_counter(&input.tokens);
+fn execute_line(line: usize, instruction: Insctructions) -> Program {
+    let syllables = wordsworth::syllable_counter(&instruction);
     let register = 0;
 
-    Instruction::STORE
+    Program::new()
 }
 
-// fn choose_register(input: Input) -> Register {
-//     match parsers::starts_with_ws(input.tokens.as_bytes()) {
+// fn choose_register(instruction: Insctructions) -> Register {
+//     match parsers::starts_with_ws(instruction.tokens.as_bytes()) {
 //         Some(_) => Register::Register1,
 //         None => Register::Register2,
 //     }

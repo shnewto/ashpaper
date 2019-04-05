@@ -2,8 +2,6 @@ use crate::program::Register;
 
 named!(pub register< &[u8], Register >, alt!(register2 | register1));
 
-const WS: &str = " \t\r\n";
-
 named!( 
     register2< &[u8], Register>,
     do_parse!(
