@@ -12,8 +12,8 @@ impl Memory {
 impl Default for Memory {
     fn default() -> Self {
         Memory {
-            register_1: Register::Register1,
-            register_2: Register::Register2,
+            r1: Register::Register1(0),
+            r2: Register::Register2(0),
             stack: vec![],
         }
     }
@@ -112,15 +112,15 @@ pub enum Command {
     GOTO,
 }
 
-pub enum Register {
-    Register1,
-    Register2,
+pub struct Memory {
+    pub r1: Register,
+    pub r2: Register,
+    pub stack: Vec<i64>,
 }
 
-struct Memory {
-    register_1: Register,
-    register_2: Register,
-    stack: Vec<i64>,
+pub enum Register {
+    Register1(i64),
+    Register2(i64),
 }
 
 #[derive(Default)]
@@ -136,11 +136,11 @@ pub fn execute(instructions: &str) -> Program {
     for (i, instruction) in program.iter_mut().enumerate() {
         println!("|{}|", instruction);
         match parsers::register(instruction.as_bytes()) {
-            Ok((_, Register::Register1)) => {
+            Ok((_, Register::Register1(val))) => {
                 println!("r1:\n{}", instruction);
             }
 
-            Ok((_, Register::Register2)) => {
+            Ok((_, Register::Register2(val))) => {
                 println!("r2:\n{}", instruction);
             }
             Err(e) => println!("??:\n{} -- {}", instruction, e),
@@ -156,13 +156,3 @@ fn execute_line(line: usize, instruction: Insctructions) -> Program {
 
     Program::new()
 }
-
-// fn choose_register(instruction: Insctructions) -> Register {
-//     match parsers::starts_with_ws(instruction.tokens.as_bytes()) {
-//         Some(_) => Register::Register1,
-//         None => Register::Register2,
-//     }
-// }
-// fn execute_line(line_number: u64) -> Program {
-//     Program::new()
-// }
