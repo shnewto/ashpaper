@@ -1,5 +1,4 @@
-#[macro_use]
-extern crate nom;
+extern crate bnf;
 extern crate wordsworth;
 mod parsers;
 pub mod program;

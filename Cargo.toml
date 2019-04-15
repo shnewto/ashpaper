@@ -10,4 +10,4 @@ path = "src/lib.rs"
 
 [dependencies]
 wordsworth = "^0.1.0"
-nom = "^4.2.3"
+bnf = "0.2.3"

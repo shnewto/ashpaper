@@ -1,4 +1,4 @@
-use crate::parsers;
+// use crate::parsers;
 use std::default::Default;
 use std::fmt;
 use std::slice;
@@ -131,28 +131,79 @@ pub struct Program {
     output: String,
 }
 
+const ASH_PAPER: &str = "
+    <poem>                 ::= <lines>
+    <lines>                ::= <line> | <line> <lines>
+    <line>                 ::= <words> <eol> | <opt whitespace> <eol>
+                            | <whitespace first> <words> <eol>
+    <whitespace first>     ::= <whitespace> <text>
+    <words>                ::= <word> | <word> <whitespace> <words>
+    <word>                 ::= <characters> | <like> | <as>
+    <characters>           ::= <character> | <character> <characters>
+    <character>            ::= <upper case> | <lower case> | <digit> | <symbol>
+    <like>                 ::= 'like'
+    <as>                   ::= 'as'
+    <whitespace>           ::= <whitespace character> 
+                            | <whitespace character> <whitespace>
+    <whitespace character> ::= ' ' | '\t' 
+    <opt whitespace>       ::= '' | <whitespace>
+    <eol>                  ::= '\n' | '\r'
+    <lower case>           ::= 'a' | 'b' | 'c' | 'd'
+                            | 'e' | 'f' | 'g' | 'h' | 'i' | 'j'
+                            | 'k' | 'l' | 'm' | 'n' | 'o' | 'p'
+                            | 'q' | 'r' | 's' | 't' | 'u' | 'v'
+                            | 'w' | 'x' | 'y' | 'z'
+    <upper case>           ::= 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+                            | 'G' | 'H' | 'I' | 'J' | 'K' | 'L'
+                            | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R'
+                            | 'S' | 'T' | 'U' | 'V' | 'W' | 'X'
+                            | 'Y' | 'Z' 
+    <digit>                ::= '0' | '1' | '2' | '3' | '4' | '5'
+                            | '6' | '7' | '8' | '9'
+    <symbol>               ::=  '|' | '!' | '#' | '$' | '%' 
+                            | '&' | '(' | ')' | '*' | '+'
+                            | <comma>  | <hyphen> | <full stop> 
+                            | <forward slash> | <question mark>
+                            | ':' | ';' |'>' | '=' | '<' | '@' 
+                            | '[' | '\\' | ']' | '^' | '_' | '`'
+                            | '{{' | '}}' | '~' | '\"' | \"'\"
+    <question mark> ::= '?'
+    <forward slash> ::= '/'
+    <full stop> ::= '.'
+    <comma> ::= ','
+    <hyphen> ::= '-'
+    ";
+
 pub fn execute(instructions: &str) -> Program {
-    let mut program = Program::from_str(instructions);
-    for (i, instruction) in program.iter_mut().enumerate() {
-        println!("|{}|", instruction);
-        match parsers::register(instruction.as_bytes()) {
-            Ok((_, Register::Register1(val))) => {
-                println!("r1:\n{}", instruction);
-            }
+    // let mut program = Program::from_str(instructions);
 
-            Ok((_, Register::Register2(val))) => {
-                println!("r2:\n{}", instruction);
-            }
-            Err(e) => println!("??:\n{} -- {}", instruction, e),
-        }
+    let ast = bnf::Grammar::from_str(ASH_PAPER);
+
+    match ast {
+        Ok(g) => println!("{:#?}", g),
+        Err(e) => println!("Failed to make grammar from String: {}", e),
     }
+    // for (i, instruction) in program.iter_mut().enumerate() {
+    //     println!("|{}|", instruction);
+    //     match parsers::register(instruction.as_bytes()) {
+    //         Ok((_, Register::Register1(val))) => {
+    //             println!("r1:\n{}", instruction);
+    //         }
 
-    program
+    //         Ok((_, Register::Register2(val))) => {
+    //             println!("r2:\n{}", instruction);
+    //         }
+    //         Err(e) => println!("??:\n{} -- {}", instruction, e),
+    //     }
+    // }
+
+    Program::new()
+    // program
 }
 
 fn execute_line(line: usize, instruction: Insctructions) -> Program {
-    let syllables = wordsworth::syllable_counter(&instruction);
-    let register = 0;
+    // let syllables = wordsworth::syllable_counter(&instruction);
+    // let register = 0;
 
     Program::new()
 }
