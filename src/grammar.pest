@@ -1,0 +1,9 @@
+WHITESPACE = _{ " "|"\t" }
+LINEBREAKS = _{ "\n"|"\r" }
+FORWARDSLASH = _{ "/" }
+FORWARDSLASH = _{ "/" }
+FULLSTOP = _{ "." }
+COMMA = _{ "," }
+HYPHEN = _{ "-" }
+UPPERCASELETTER = { "\p{Lu}" }
+LOWERCASELETTER = { "\p{Ll}" }

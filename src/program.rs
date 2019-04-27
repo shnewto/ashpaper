@@ -1,4 +1,7 @@
 // use crate::parsers;
+#[derive(Parser)]
+#[grammar = "grammar.pest"]
+pub struct AshPaperParser;
 use std::default::Default;
 use std::fmt;
 use std::slice;
@@ -54,17 +57,9 @@ impl Program {
     }
 
     /// Construct an `Program` from `Insctructions`s
-    fn from_parts(v: Vec<Insctructions>) -> Program {
+    pub fn from_parts(v: Vec<Insctructions>) -> Program {
         Program {
             instructions: v,
-            ..Default::default()
-        }
-    }
-
-    // Get `Program` by parsing a string
-    pub fn from_str(s: &str) -> Program {
-        Program {
-            instructions: s.lines().map(|i| String::from(i)).collect::<Vec<String>>(),
             ..Default::default()
         }
     }
@@ -126,63 +121,14 @@ pub enum Register {
 #[derive(Default)]
 pub struct Program {
     instructions: Vec<Insctructions>,
-    memory: Memory,
-    execution_index: u64,
-    output: String,
+    _memory: Memory,
+    _execution_index: u64,
+    _output: String,
 }
 
-const ASH_PAPER: &str = "
-    <poem>                 ::= <lines>
-    <lines>                ::= <line> | <line> <lines>
-    <line>                 ::= <words> <eol> | <opt whitespace> <eol>
-                            | <whitespace first> <words> <eol>
-    <whitespace first>     ::= <whitespace> <text>
-    <words>                ::= <word> | <word> <whitespace> <words>
-    <word>                 ::= <characters> | <like> | <as>
-    <characters>           ::= <character> | <character> <characters>
-    <character>            ::= <upper case> | <lower case> | <digit> | <symbol>
-    <like>                 ::= 'like'
-    <as>                   ::= 'as'
-    <whitespace>           ::= <whitespace character> 
-                            | <whitespace character> <whitespace>
-    <whitespace character> ::= ' ' | '\t' 
-    <opt whitespace>       ::= '' | <whitespace>
-    <eol>                  ::= '\n' | '\r'
-    <lower case>           ::= 'a' | 'b' | 'c' | 'd'
-                            | 'e' | 'f' | 'g' | 'h' | 'i' | 'j'
-                            | 'k' | 'l' | 'm' | 'n' | 'o' | 'p'
-                            | 'q' | 'r' | 's' | 't' | 'u' | 'v'
-                            | 'w' | 'x' | 'y' | 'z'
-    <upper case>           ::= 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
-                            | 'G' | 'H' | 'I' | 'J' | 'K' | 'L'
-                            | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R'
-                            | 'S' | 'T' | 'U' | 'V' | 'W' | 'X'
-                            | 'Y' | 'Z' 
-    <digit>                ::= '0' | '1' | '2' | '3' | '4' | '5'
-                            | '6' | '7' | '8' | '9'
-    <symbol>               ::=  '|' | '!' | '#' | '$' | '%' 
-                            | '&' | '(' | ')' | '*' | '+'
-                            | <comma>  | <hyphen> | <full stop> 
-                            | <forward slash> | <question mark>
-                            | ':' | ';' |'>' | '=' | '<' | '@' 
-                            | '[' | '\\' | ']' | '^' | '_' | '`'
-                            | '{{' | '}}' | '~' | '\"' | \"'\"
-    <question mark> ::= '?'
-    <forward slash> ::= '/'
-    <full stop> ::= '.'
-    <comma> ::= ','
-    <hyphen> ::= '-'
-    ";
-
-pub fn execute(instructions: &str) -> Program {
+pub fn execute(_instructions: &str) -> Program {
     // let mut program = Program::from_str(instructions);
 
-    let ast = bnf::Grammar::from_str(ASH_PAPER);
-
-    match ast {
-        Ok(g) => println!("{:#?}", g),
-        Err(e) => println!("Failed to make grammar from String: {}", e),
-    }
     // for (i, instruction) in program.iter_mut().enumerate() {
     //     println!("|{}|", instruction);
     //     match parsers::register(instruction.as_bytes()) {
@@ -201,7 +147,7 @@ pub fn execute(instructions: &str) -> Program {
     // program
 }
 
-fn execute_line(line: usize, instruction: Insctructions) -> Program {
+fn _execute_line(_line: usize, _instruction: Insctructions) -> Program {
     // let syllables = wordsworth::syllable_counter(&instruction);
     // let register = 0;
 
