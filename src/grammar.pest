@@ -4,9 +4,8 @@ forwardslash = _{ "/" }
 fullstop = _{ "." }
 comma = _{ "," }
 hyphen = _{ "-" }
-letters = _{ (LOWERCASE_LETTER | UPPERCASE_LETTER)+ }
-capsfirstword = _{UPPERCASE_LETTER ~ letters* }
-capsinword = _{LOWERCASE_LETTER+ ~ UPPERCASE_LETTER ~ letters*}
+capsinword = _{ ( LOWERCASE_LETTER+ | UPPERCASE_LETTER ) ~ UPPERCASE_LETTER ~ LETTER*}
+capsfirstword = _{UPPERCASE_LETTER ~ LETTER* }
 lowerword = _{ LOWERCASE_LETTER+ }
 line = _{ 
     ( capsinword 
@@ -17,9 +16,11 @@ line = _{
     | fullstop 
     | forwardslash 
     | whitespace
-    | notlinebreak )+
+    | PUNCTUATION 
+    | SYMBOL 
+    | NUMBER
+    | MARK )+
     }
-notlinebreak = _{ [^linebreak] }
 program = { SOI ~ (line ~ linebreak)+ ~ EOI }
 
 

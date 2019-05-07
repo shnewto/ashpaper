@@ -129,9 +129,9 @@ pub struct Program {
 }
 
 pub fn execute(instructions: &str) -> Program {
-    let program = AshPaper::parse(Rule::program, instructions);
+    let program = AshPaper::parse(Rule::program, instructions).unwrap_or_else(|e| panic!("{}", e));;
 
-    println!("{:?}", program);
+    println!("{:?}", program.as_str());
     // for (i, instruction) in program.iter_mut().enumerate() {
     //     println!("|{}|", instruction);
     //     match parsers::register(instruction.as_bytes()) {
