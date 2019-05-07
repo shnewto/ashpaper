@@ -1,7 +1,9 @@
-// use crate::parsers;
+use pest::Parser;
+
 #[derive(Parser)]
 #[grammar = "grammar.pest"]
-pub struct AshPaperParser;
+pub struct AshPaper;
+
 use std::default::Default;
 use std::fmt;
 use std::slice;
@@ -126,9 +128,10 @@ pub struct Program {
     _output: String,
 }
 
-pub fn execute(_instructions: &str) -> Program {
-    // let mut program = Program::from_str(instructions);
+pub fn execute(instructions: &str) -> Program {
+    let program = AshPaper::parse(Rule::program, instructions);
 
+    println!("{:?}", program);
     // for (i, instruction) in program.iter_mut().enumerate() {
     //     println!("|{}|", instruction);
     //     match parsers::register(instruction.as_bytes()) {

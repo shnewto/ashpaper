@@ -1,9 +1,25 @@
-WHITESPACE = _{ " "|"\t" }
-LINEBREAKS = _{ "\n"|"\r" }
-FORWARDSLASH = _{ "/" }
-FORWARDSLASH = _{ "/" }
-FULLSTOP = _{ "." }
-COMMA = _{ "," }
-HYPHEN = _{ "-" }
-UPPERCASELETTER = { "\p{Lu}" }
-LOWERCASELETTER = { "\p{Ll}" }
+whitespace = _{ " "|"\t" }
+linebreak = _{ NEWLINE }
+forwardslash = _{ "/" }
+fullstop = _{ "." }
+comma = _{ "," }
+hyphen = _{ "-" }
+letters = _{ (LOWERCASE_LETTER | UPPERCASE_LETTER)+ }
+capsfirstword = _{UPPERCASE_LETTER ~ letters* }
+capsinword = _{LOWERCASE_LETTER+ ~ UPPERCASE_LETTER ~ letters*}
+lowerword = _{ LOWERCASE_LETTER+ }
+line = _{ 
+    ( capsinword 
+    | capsfirstword 
+    | lowerword
+    | hyphen 
+    | comma 
+    | fullstop 
+    | forwardslash 
+    | whitespace
+    | notlinebreak )+
+    }
+notlinebreak = _{ [^linebreak] }
+program = { SOI ~ (line ~ linebreak)+ ~ EOI }
+
+
