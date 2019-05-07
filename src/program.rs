@@ -107,6 +107,7 @@ pub enum Command {
     POP,
     PUSH,
     GOTO,
+    NOOP,
 }
 
 pub struct Memory {
@@ -131,28 +132,11 @@ pub struct Program {
 pub fn execute(instructions: &str) -> Program {
     let program = AshPaper::parse(Rule::program, instructions).unwrap_or_else(|e| panic!("{}", e));;
 
-    println!("{:?}", program.as_str());
-    // for (i, instruction) in program.iter_mut().enumerate() {
-    //     println!("|{}|", instruction);
-    //     match parsers::register(instruction.as_bytes()) {
-    //         Ok((_, Register::Register1(val))) => {
-    //             println!("r1:\n{}", instruction);
-    //         }
-
-    //         Ok((_, Register::Register2(val))) => {
-    //             println!("r2:\n{}", instruction);
-    //         }
-    //         Err(e) => println!("??:\n{} -- {}", instruction, e),
-    //     }
-    // }
+    println!("{:#?}", program);
 
     Program::new()
-    // program
 }
 
 fn _execute_line(_line: usize, _instruction: Insctructions) -> Program {
-    // let syllables = wordsworth::syllable_counter(&instruction);
-    // let register = 0;
-
     Program::new()
 }

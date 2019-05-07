@@ -1,13 +1,16 @@
-whitespace = _{ " "|"\t" }
-linebreak = _{ NEWLINE }
-forwardslash = _{ "/" }
-fullstop = _{ "." }
-comma = _{ "," }
-hyphen = _{ "-" }
-capsinword = _{ ( LOWERCASE_LETTER+ | UPPERCASE_LETTER ) ~ UPPERCASE_LETTER ~ LETTER*}
-capsfirstword = _{UPPERCASE_LETTER ~ LETTER* }
-lowerword = _{ LOWERCASE_LETTER+ }
-line = _{ 
+whitespace = { " "|"\t" }
+blankline = { NEWLINE ~ whitespace* ~ NEWLINE }
+forwardslash = { "/" }
+fullstop = { "." }
+comma = { "," }
+hyphen = { "-" }
+capsinword = { 
+    ( LOWERCASE_LETTER+ | UPPERCASE_LETTER ) 
+    ~ UPPERCASE_LETTER ~ LETTER*
+    }
+capsfirstword = { UPPERCASE_LETTER ~ LETTER* }
+lowerword = { LOWERCASE_LETTER+ }
+line = { 
     ( capsinword 
     | capsfirstword 
     | lowerword
@@ -21,6 +24,6 @@ line = _{
     | NUMBER
     | MARK )+
     }
-program = { SOI ~ (line ~ linebreak)+ ~ EOI }
+program = { SOI ~ (line ~ (blankline | NEWLINE))+ ~ EOI }
 
 
