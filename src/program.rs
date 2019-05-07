@@ -130,9 +130,14 @@ pub struct Program {
 }
 
 pub fn execute(instructions: &str) -> Program {
-    let program = AshPaper::parse(Rule::program, instructions).unwrap_or_else(|e| panic!("{}", e));;
+    let program = AshPaper::parse(Rule::program, instructions)
+        .unwrap_or_else(|e| panic!("{}", e))
+        .next()
+        .unwrap();
 
-    println!("{:#?}", program);
+    for (i, line) in program.into_inner().enumerate() {
+        println!("{} : {:?}\n\n", i + 1, line);
+    }
 
     Program::new()
 }
