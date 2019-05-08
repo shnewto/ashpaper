@@ -1,41 +1,41 @@
-lowerword = {  whitespace* ~ LOWERCASE_LETTER+}
+lowerword = {  whitespace* ~ LOWERCASE_LETTER+ }
 whitespace = { " "|"\t" }
-endofword = { whitespace | PUNCTUATION }
-
-noop = { whitespace* ~ NEWLINE }
 
 goto = { "/" }
-printvalue = { "." }
-popandstore = { "," }
-pushontostack = { "-" }
+printregister = { "." }
+pop = { "," }
+push = { "-" }
 add = { whitespace* ~ ("like" | "as")}
-printcharacter = { "?" }
+print = { "?" }
 negate = { 
     whitespace* ~ LETTER  ~ UPPERCASE_LETTER ~ LETTER*
-    }
+}
 multiply = { whitespace* ~ UPPERCASE_LETTER ~ LETTER* }
 storesyllables = {
-    whitespace
-    | lowerword
+    whitespace*
+    ~ 
+    (
+    lowerword
     | PUNCTUATION 
     | SYMBOL 
     | NUMBER
     | MARK
+    )
 }
 
 line = { 
     ( goto 
-    | printvalue
-    | popandstore 
-    | pushontostack 
-    | add 
-    | printcharacter 
     | negate 
     | multiply 
+    | add 
+    | print 
+    | printregister
+    | pop 
+    | push 
     | storesyllables 
-    )+
+    )*
 }
 
-program = { SOI ~ (( line ~ NEWLINE) | noop )+ ~ EOI }
+program = { SOI ~ (line ~ NEWLINE)* ~ EOI }
 
 
