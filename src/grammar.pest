@@ -1,41 +1,43 @@
-lowerword = {  whitespace* ~ LOWERCASE_LETTER+ }
-whitespace = { " "|"\t" }
-
+whitespace = { " " | "\t" }
 goto = { "/" }
-printregister = { "." }
+negate = { character+ ~ UPPERCASE_LETTER }
+multiply = { UPPERCASE_LETTER ~ (!UPPERCASE_LETTER ~ character)+ ~ not_character }
+add = { (not_character+ ~ "like" ~ not_character+) | (not_character+ ~ "as" ~ not_character+)}
+print = { "?" }
+print_register = { "." }
 pop = { "," }
 push = { "-" }
-add = { whitespace* ~ ("like" | "as")}
-print = { "?" }
-negate = { 
-    whitespace* ~ LETTER  ~ UPPERCASE_LETTER ~ LETTER*
-}
-multiply = { whitespace* ~ UPPERCASE_LETTER ~ LETTER* }
-storesyllables = {
-    whitespace*
-    ~ 
-    (
-    lowerword
-    | PUNCTUATION 
-    | SYMBOL 
-    | NUMBER
-    | MARK
-    )
+store_syllables = { !explicit_rule ~ (character | whitespace) }
+
+linebreak = _{
+     whitespace* ~ (LINE_SEPARATOR | PARAGRAPH_SEPARATOR | "\n" | "\r")
 }
 
-line = { 
+not_character = { !character ~ ANY }
+
+character = _{ LETTER | MARK | NUMBER | PUNCTUATION | SYMBOL }
+
+explicit_rule = _{
     ( goto 
     | negate 
     | multiply 
     | add 
     | print 
-    | printregister
+    | print_register
     | pop 
     | push 
-    | storesyllables 
-    )*
+    )
 }
 
-program = { SOI ~ (line ~ NEWLINE)* ~ EOI }
+
+line = {
+    whitespace* ~
+    ( (store_syllables+ ~ linebreak)
+    | ((explicit_rule | character | whitespace)+ ~ linebreak)
+    | linebreak )
+
+}
+
+program = { SOI ~ line+ ~ EOI }
 
 

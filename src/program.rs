@@ -158,15 +158,16 @@ fn get_register(rule: pest::iterators::Pair<'_, Rule>) -> u8 {
 }
 
 fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
-    // println!("{:#?}", line);
+    // println!("{:#?}\n\n", line);
     let syllables = wordsworth::syllable_counter(line.as_str());
+    let lineclone = line.clone();
 
     for instruction in line.into_inner() {
         match instruction.as_rule() {
             Rule::goto => {
                 println!(
-                    "{} -- if register 0 > {} goto line number indicated by register {}",
-                    instruction.as_str(),
+                    "{} -- if register 0 > {} goto line number indicated by register {}\n\n",
+                    lineclone.as_str(),
                     syllables,
                     get_register(instruction)
                 );
@@ -174,56 +175,56 @@ fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
             }
             Rule::negate => {
                 println!(
-                    "{} -- negate register {}",
-                    instruction.as_str(),
+                    "{} -- negate register {}\n\n",
+                    lineclone.as_str(),
                     get_register(instruction)
                 );
                 return;
             }
             Rule::multiply => {
                 println!(
-                    "{} -- multiply registers and store in register {}",
-                    instruction.as_str(),
+                    "{} -- multiply registers and store in register {}\n\n",
+                    lineclone.as_str(),
                     get_register(instruction)
                 );
                 return;
             }
             Rule::add => {
                 println!(
-                    "{} -- add register 0 and 1 in register {}",
-                    instruction.as_str(),
+                    "{} -- add register 0 and 1 in register {}\n\n",
+                    lineclone.as_str(),
                     get_register(instruction)
                 );
                 return;
             }
             Rule::print => {
-                println!("{} -- print as string", instruction.as_str());
+                println!("{} -- print as string\n\n", lineclone.as_str());
                 return;
             }
-            Rule::printregister => {
-                println!("{} -- print contents of registers", instruction.as_str());
+            Rule::print_register => {
+                println!("{} -- print contents of registers\n\n", lineclone.as_str());
                 return;
             }
             Rule::pop => {
                 println!(
-                    "{} -- pop the stack onto register {}",
-                    instruction.as_str(),
+                    "{} -- pop the stack onto register {}\n\n",
+                    lineclone.as_str(),
                     get_register(instruction)
                 );
                 return;
             }
             Rule::push => {
                 println!(
-                    "{} -- push contents of register {} onto the stack",
-                    instruction.as_str(),
+                    "{} -- push contents of register {} onto the stack\n\n",
+                    lineclone.as_str(),
                     get_register(instruction)
                 );
                 return;
             }
-            Rule::storesyllables => {
+            Rule::store_syllables => {
                 println!(
-                    "{} -- store {} in register {}",
-                    instruction.as_str(),
+                    "{} -- store_syllables {} in register {}\n\n",
+                    lineclone.as_str(),
                     syllables,
                     get_register(instruction)
                 );
@@ -231,7 +232,7 @@ fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
             }
             Rule::whitespace => {}
             _ => {
-                println!("noop: {}", instruction.as_str());
+                println!("noop: {}\n\n", lineclone.as_str());
             }
         }
     }
