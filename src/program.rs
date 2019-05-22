@@ -137,9 +137,6 @@ pub fn execute(instructions: &str) {
         .unwrap();
 
     for (i, line) in program.into_inner().enumerate() {
-        // println!("{} : {:?}\n\n", i + 1, line);
-        // println!("{}", line.as_str());
-        // println!("{}", wordsworth::syllable_counter(line.as_str()))
         interpret_line(line);
     }
 
@@ -147,7 +144,9 @@ pub fn execute(instructions: &str) {
 }
 
 fn get_register(rule: pest::iterators::Pair<'_, Rule>) -> u8 {
+    // println!("register??? rule {}", rule.clone());
     if let Some(r) = rule.into_inner().next() {
+        println!("or r {}", r.clone());
         match r.as_rule() {
             Rule::whitespace => 1,
             _ => 0,
@@ -202,7 +201,11 @@ fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
                 return;
             }
             Rule::print_register => {
-                println!("{} -- print contents of registers\n\n", lineclone.as_str());
+                println!(
+                    "{} -- print contents of register {}\n\n",
+                    lineclone.as_str(),
+                    get_register(instruction)
+                );
                 return;
             }
             Rule::pop => {
@@ -232,7 +235,7 @@ fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
             }
             Rule::whitespace => {}
             _ => {
-                println!("noop: {}\n\n", lineclone.as_str());
+                println!("noop: {}\n{}\n", lineclone.as_str(), instruction);
             }
         }
     }
