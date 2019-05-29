@@ -1,13 +1,14 @@
-whitespace = { " " | "\t" }
+
+whitespace = _{ " " | "\t" }
 goto = { "/" }
 negate = { (!UPPERCASE_LETTER ~ character)+ ~ UPPERCASE_LETTER ~ character* }
 multiply = { UPPERCASE_LETTER ~ (!UPPERCASE_LETTER ~ character)+ ~ not_character }
-add = { "like"| "as" }
+add = { "like" | "as" }
 print = { "?" }
 print_register = { "." }
 pop = { "," }
 push = { "-" }
-store_syllables = { !explicit_rule ~ character }
+store_syllables = { !explicit_rule ~ (character | whitespace) }
 
 linebreak = _{
      LINE_SEPARATOR | PARAGRAPH_SEPARATOR | "\n" | "\r"
@@ -26,25 +27,33 @@ explicit_rule = _{
     | print_register
     | pop 
     | push 
-    
 }
 
 wrapped_store_syllables = _{
-    (store_syllables ~ whitespace*)+ ~ linebreak
+    (store_syllables ~ whitespace*)+
 }
 
 wrapped_explicit_rules = _{
-    ((explicit_rule | character) ~ whitespace*)+ ~ linebreak
+    ((explicit_rule | character) ~ whitespace*)+
+}
+
+rules = {
+    wrapped_store_syllables | wrapped_explicit_rules 
+}
+
+register_one = {
+    whitespace+ ~ rules+
+}
+
+register_zero = {
+    rules+
 }
 
 line = {
-    whitespace* ~
-    ( wrapped_store_syllables
-    | wrapped_explicit_rules
-    | linebreak )
-
+    ((register_one | register_zero) ~ linebreak)
+    | linebreak
 }
 
-program = { SOI ~ line* ~ EOI }
-
-
+program = { 
+    SOI ~ line* ~ EOI
+}

@@ -143,48 +143,29 @@ pub fn execute(instructions: &str) {
     ()
 }
 
-fn get_register(rule: pest::iterators::Pair<'_, Rule>) -> u8 {
-    // println!("register??? rule {}", rule.clone());
-    if let Some(r) = rule.into_inner().next() {
-        println!("or r {}", r.clone());
-        match r.as_rule() {
-            Rule::whitespace => 1,
-            _ => 0,
-        }
-    } else {
-        0
-    }
-}
-
-fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
-    // println!("{:#?}\n\n", line);
-    let syllables = wordsworth::syllable_counter(line.as_str());
-    let lineclone = line.clone();
-
-    for instruction in line.into_inner() {
+fn interpret_instruction(rules: pest::iterators::Pair<'_, Rule>, register: usize) {
+    let syllables = wordsworth::syllable_counter(rules.as_str());
+    let lineclone = rules.clone();
+    for instruction in rules.into_inner() {
         match instruction.as_rule() {
             Rule::goto => {
                 println!(
                     "{} -- if register 0 > {} goto line number indicated by register {}\n\n",
                     lineclone.as_str(),
                     syllables,
-                    get_register(instruction)
+                    register
                 );
                 return;
             }
             Rule::negate => {
-                println!(
-                    "{} -- negate register {}\n\n",
-                    lineclone.as_str(),
-                    get_register(instruction)
-                );
+                println!("{} -- negate register {}\n\n", lineclone.as_str(), register);
                 return;
             }
             Rule::multiply => {
                 println!(
                     "{} -- multiply registers and store in register {}\n\n",
                     lineclone.as_str(),
-                    get_register(instruction)
+                    register
                 );
                 return;
             }
@@ -192,7 +173,7 @@ fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
                 println!(
                     "{} -- add register 0 and 1 in register {}\n\n",
                     lineclone.as_str(),
-                    get_register(instruction)
+                    register
                 );
                 return;
             }
@@ -204,7 +185,7 @@ fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
                 println!(
                     "{} -- print contents of register {}\n\n",
                     lineclone.as_str(),
-                    get_register(instruction)
+                    register
                 );
                 return;
             }
@@ -212,7 +193,7 @@ fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
                 println!(
                     "{} -- pop the stack onto register {}\n\n",
                     lineclone.as_str(),
-                    get_register(instruction)
+                    register
                 );
                 return;
             }
@@ -220,7 +201,7 @@ fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
                 println!(
                     "{} -- push contents of register {} onto the stack\n\n",
                     lineclone.as_str(),
-                    get_register(instruction)
+                    register
                 );
                 return;
             }
@@ -229,13 +210,31 @@ fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
                     "{} -- store_syllables {} in register {}\n\n",
                     lineclone.as_str(),
                     syllables,
-                    get_register(instruction)
+                    register
                 );
                 return;
             }
-            Rule::whitespace => {}
             _ => {
-                println!("noop: {}\n{}\n", lineclone.as_str(), instruction);
+                interpret_instruction(instruction.clone(), register);
+                // println!("noop: {}\n{}\n", lineclone.as_str(), instruction);
+            }
+        }
+    }
+}
+
+fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
+    // println!("{:#?}\n\n", line);
+
+    for instruction in line.into_inner() {
+        match instruction.as_rule() {
+            Rule::register_one => {
+                interpret_instruction(instruction.clone(), 1);
+            }
+            Rule::register_zero => {
+                interpret_instruction(instruction.clone(), 0);
+            }
+            _ => {
+                // println!("noop: {}\n{}\n", lineclone.as_str(), instruction);
             }
         }
     }
