@@ -1,5 +1,6 @@
 
 whitespace = _{ " " | "\t" }
+
 goto = { "/" }
 negate = { (!UPPERCASE_LETTER ~ character)+ ~ UPPERCASE_LETTER ~ character* }
 multiply = { UPPERCASE_LETTER ~ (!UPPERCASE_LETTER ~ character)+ ~ not_character }
@@ -33,20 +34,20 @@ wrapped_store_syllables = _{
     (store_syllables ~ whitespace*)+
 }
 
-wrapped_explicit_rules = _{
-    ((explicit_rule | character) ~ whitespace*)+
+wrapped_explicit_rule = _{
+    ((explicit_rule|character+) ~ (character|whitespace)+)+
 }
 
-rules = {
-    wrapped_store_syllables | wrapped_explicit_rules 
+rule = {
+    wrapped_store_syllables | wrapped_explicit_rule
 }
 
 register_one = {
-    whitespace+ ~ rules+
+    whitespace+ ~ rule
 }
 
 register_zero = {
-    rules+
+    rule
 }
 
 line = {

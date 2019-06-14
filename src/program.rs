@@ -215,8 +215,8 @@ fn interpret_instruction(rules: pest::iterators::Pair<'_, Rule>, register: usize
                 return;
             }
             _ => {
-                interpret_instruction(instruction.clone(), register);
                 // println!("noop: {}\n{}\n", lineclone.as_str(), instruction);
+                interpret_instruction(instruction.clone(), register);
             }
         }
     }
