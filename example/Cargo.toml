@@ -7,5 +7,5 @@ authors = ["Shea Newton <sheanewt@gmail.com>"]
 name = "example"
 path = "src/main.rs"
 
-[dependencies.ash_paper]
+[dependencies.ashpaper]
 path = ".."
