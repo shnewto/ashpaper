@@ -1,60 +1,41 @@
 
-whitespace = _{ " " | "\t" }
-
-goto = { "/" }
-negate = { (!UPPERCASE_LETTER ~ character)+ ~ UPPERCASE_LETTER ~ character* }
-multiply = { UPPERCASE_LETTER ~ (!UPPERCASE_LETTER ~ character)+ ~ not_character }
-add = { "like" | "as" }
-print = { "?" }
-print_register = { "." }
-pop = { "," }
-push = { "-" }
-store_syllables = { !explicit_rule ~ (character | whitespace) }
-
-linebreak = _{
-     LINE_SEPARATOR | PARAGRAPH_SEPARATOR | "\n" | "\r"
+program = {
+    goto
+    | negate
+    | multiply
+    | add
+    | print_value
+    | print_register
+    | pop
+    | push
+    | noop
+    | store_syllables
 }
 
-not_character = _{ !character ~ ANY }
+goto  = { SOI ~ ANY* ~ "/" ~ ANY* ~ EOI }
+negate = { SOI ~ ANY* ~ (!UPPERCASE_LETTER ~ character)+ ~ UPPERCASE_LETTER ~ ANY* ~ EOI }
+multiply = { SOI ~ ANY* ~ UPPERCASE_LETTER ~ ANY* ~ EOI }
+add = { the_word_like | the_word_as }
+print_value =  { SOI ~ ANY* ~ "?" ~ ANY* ~ EOI }
+print_register =  { SOI ~ ANY* ~ "." ~ ANY* ~ EOI }
+pop =  { SOI ~ ANY* ~ "," ~ ANY* ~ EOI }
+push =  { SOI ~ ANY* ~ "-" ~ ANY* ~ EOI }
+noop = { SOI ~ EOI }
+store_syllables =  { SOI ~ ANY* ~ EOI }
 
 character = _{ LETTER | MARK | NUMBER | PUNCTUATION | SYMBOL }
+not_character = _{ !character ~ ANY* }
+whitespace = _{ " " | "\t" }
 
-explicit_rule = _{
-    goto 
-    | negate 
-    | multiply 
-    | add 
-    | print 
-    | print_register
-    | pop 
-    | push 
-}
+the_word_like = { like_only | like_first | like_last | like_else }
+the_word_as = { as_only | as_first | as_last | as_else }
 
-wrapped_store_syllables = _{
-    (store_syllables ~ whitespace*)+
-}
+like_only = { SOI ~ "like" ~ EOI }
+like_first = { SOI ~ "like" ~ not_character ~ ANY* ~ EOI }
+like_last = { SOI ~ ANY* ~ not_character ~ "like" ~ EOI }
+like_else = { SOI ~ ANY* ~ not_character ~ "like" ~ not_character ~ ANY* ~ EOI }
 
-wrapped_explicit_rule = _{
-    ((explicit_rule|character+) ~ (character|whitespace)+)+
-}
-
-rule = {
-    wrapped_store_syllables | wrapped_explicit_rule
-}
-
-register_one = {
-    whitespace+ ~ rule
-}
-
-register_zero = {
-    rule
-}
-
-line = {
-    ((register_one | register_zero) ~ linebreak)
-    | linebreak
-}
-
-program = { 
-    SOI ~ line* ~ EOI
-}
+as_only = { SOI ~ "as" ~ EOI }
+as_first = { SOI ~ "as" ~ not_character ~ ANY* ~ EOI }
+as_last = { SOI ~ ANY* ~ not_character ~ "as" ~ EOI }
+as_else = { SOI ~ ANY* ~ not_character ~ "as" ~ not_character ~ ANY* ~ EOI }
