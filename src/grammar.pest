@@ -12,9 +12,15 @@ program = {
     | store_syllables
 }
 
+cul = _{ character ~ uppercase_letter}
+any_not_cul = _{ !cul ~ any }
+
+tc = _{ whitespace ~ uppercase_letter }
+any_not_tc = _{ !tc ~ any }
+
 goto  = { start ~ any_not_forward_slash* ~ "/" ~ any* ~ end }
-negate = { start ~ any_not_title_case* ~ uppercase_letter ~ any* ~ end }
-multiply = { start ~ any_not_uppercase_letter* ~ UPPERCASE_LETTER ~ any* ~ end }
+negate = { start ~ any_not_cul* ~ cul ~ any* ~ end }
+multiply = { start ~ (uppercase_letter | (any_not_tc* ~ tc)) ~ any* ~ end }
 add = { the_word_like | the_word_as }
 print_value =  { start ~ any_not_question* ~ "?" ~ any* ~ end }
 print_register =  { start ~ any_not_period* ~ "." ~ any* ~ end }
@@ -23,43 +29,50 @@ push =  { start ~ any_not_hyphen* ~ "-" ~ any* ~ end }
 noop = { start ~ end }
 store_syllables =  { start ~ any* ~ end }
 
+words_followed_by_spaces = { whitespace | (character+ ~ whitespace) }
 
-any_not_title_case = _{ (any+ ~ whitespace) | (!any_not_uppercase_letter ~ any) }
+start_no_whitespace = { SOI }
 
-uppercase_letter = _{ UPPERCASE_LETTER }
-any_not_uppercase_letter = _{ !uppercase_letter ~ any}
+uppercase_letter = { UPPERCASE_LETTER }
+any_not_uppercase_letter = { !uppercase_letter ~ any}
 
-forward_slash = _{ "/" }
-any_not_forward_slash = _{ !forward_slash ~ any }
+forward_slash = { "/" }
+any_not_forward_slash = { !forward_slash ~ any }
 
-comma = _{ "," }
-any_not_comma = _{ !comma ~ any }
+comma = { "," }
+any_not_comma = { !comma ~ any }
 
-period = _{ "." }
-any_not_period = _{ !period ~ any }
+period = { "." }
+any_not_period = { !period ~ any }
 
-question = _{ "?" }
-any_not_question = _{ !question ~ any }
+question = { "?" }
+any_not_question = { !question ~ any }
 
-hyphen = _{ "-" }
-any_not_hyphen = _{ !hyphen ~ any }
+hyphen = { "-" }
+any_not_hyphen = { !hyphen ~ any }
 
-character = _{ LETTER | MARK | NUMBER | PUNCTUATION | SYMBOL }
-start = _{ SOI ~ whitespace*  }
-end = _{ whitespace* ~ EOI }
-not_character = _{ !character ~ any* }
+character = { LETTER | MARK | NUMBER | PUNCTUATION | SYMBOL }
+start = { SOI ~ whitespace*  }
+end = { whitespace* ~ EOI }
+any_not_character = { !character ~ any }
+any_not_uppercase_letter_character = { !uppercase_letter ~ character}
+
 whitespace = { " " | "\t" }
-any = _{ ANY }
+any = { ANY }
 
 the_word_like = { like_only | like_first | like_last | like_else }
 the_word_as = { as_only | as_first | as_last | as_else }
 
+any_character_not_uppercase = { !uppercase_letter ~ character }
+word_followed_by_space = { character+ ~ whitespace+ }
+
+
 like_only = { start ~ "like" ~ end }
-like_first = { start ~ "like" ~ not_character ~ any* ~ end }
-like_last = { start ~ any* ~ not_character ~ "like" ~ end }
-like_else = { start ~ any* ~ not_character ~ "like" ~ not_character ~ any* ~ end }
+like_first = { start ~ "like" ~ any_not_character* ~ any* ~ end }
+like_last = { start ~ any* ~ any_not_character* ~ "like" ~ end }
+like_else = { start ~ any* ~ any_not_character* ~ "like" ~ any_not_character* ~ any* ~ end }
 
 as_only = { start ~ "as" ~ end }
-as_first = { start ~ "as" ~ not_character ~ any* ~ end }
-as_last = { start ~ any* ~ not_character ~ "as" ~ end }
-as_else = { start ~ any* ~ not_character ~ "as" ~ not_character ~ any* ~ end }
+as_first = { start ~ "as" ~ any_not_character* ~ any* ~ end }
+as_last = { start ~ any* ~ any_not_character* ~ "as" ~ end }
+as_else = { start ~ any* ~ any_not_character* ~ "as" ~ any_not_character* ~ any* ~ end }
