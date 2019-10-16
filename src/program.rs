@@ -100,6 +100,10 @@ fn interpret_instruction(rules: pest::iterators::Pair<'_, Rule>, register: usize
                 );
                 return;
             }
+            Rule::noop => {
+                println!("{} -- noop\n\n", lineclone.as_str());
+                return;
+            }
             _ => {
                 // println!("who knows??: {}\n{:#?}\n", lineclone.as_str(), instruction);
                 interpret_instruction(instruction.clone(), register);
