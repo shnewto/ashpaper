@@ -1,2 +1,2 @@
 # Ash Paper
-inpterpreter for the esolang Ash Paper found here https://github.com/wphicks/Esopo
+inpterpreter for the esolang Ash Paper found here https://github.com/wphicks/Esopo (written in Rust)

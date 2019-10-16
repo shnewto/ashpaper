@@ -1,11 +1,11 @@
 [package]
-name = "ash_paper"
+name = "ashpaper"
 version = "0.1.0"
 authors = ["Shea Newton <shnewto@gmail.com>"]
 edition = "2018"
 
 [lib]
-name = "ash_paper"
+name = "ashpaper"
 path = "src/lib.rs"
 
 [dependencies]
