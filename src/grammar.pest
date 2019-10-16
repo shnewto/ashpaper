@@ -12,30 +12,54 @@ program = {
     | store_syllables
 }
 
-goto  = { SOI ~ ANY* ~ "/" ~ ANY* ~ EOI }
-negate = { SOI ~ ANY* ~ (!UPPERCASE_LETTER ~ character)+ ~ UPPERCASE_LETTER ~ ANY* ~ EOI }
-multiply = { SOI ~ ANY* ~ UPPERCASE_LETTER ~ ANY* ~ EOI }
+goto  = { start ~ any_not_forward_slash* ~ "/" ~ any* ~ end }
+negate = { start ~ any_not_title_case* ~ uppercase_letter ~ any* ~ end }
+multiply = { start ~ any_not_uppercase_letter* ~ UPPERCASE_LETTER ~ any* ~ end }
 add = { the_word_like | the_word_as }
-print_value =  { SOI ~ ANY* ~ "?" ~ ANY* ~ EOI }
-print_register =  { SOI ~ ANY* ~ "." ~ ANY* ~ EOI }
-pop =  { SOI ~ ANY* ~ "," ~ ANY* ~ EOI }
-push =  { SOI ~ ANY* ~ "-" ~ ANY* ~ EOI }
-noop = { SOI ~ EOI }
-store_syllables =  { SOI ~ ANY* ~ EOI }
+print_value =  { start ~ any_not_question* ~ "?" ~ any* ~ end }
+print_register =  { start ~ any_not_period* ~ "." ~ any* ~ end }
+pop =  { start ~ any_not_comma* ~ "," ~ any* ~ end }
+push =  { start ~ any_not_hyphen* ~ "-" ~ any* ~ end }
+noop = { start ~ end }
+store_syllables =  { start ~ any* ~ end }
+
+
+any_not_title_case = _{ (any+ ~ whitespace) | (!any_not_uppercase_letter ~ any) }
+
+uppercase_letter = _{ UPPERCASE_LETTER }
+any_not_uppercase_letter = _{ !uppercase_letter ~ any}
+
+forward_slash = _{ "/" }
+any_not_forward_slash = _{ !forward_slash ~ any }
+
+comma = _{ "," }
+any_not_comma = _{ !comma ~ any }
+
+period = _{ "." }
+any_not_period = _{ !period ~ any }
+
+question = _{ "?" }
+any_not_question = _{ !question ~ any }
+
+hyphen = _{ "-" }
+any_not_hyphen = _{ !hyphen ~ any }
 
 character = _{ LETTER | MARK | NUMBER | PUNCTUATION | SYMBOL }
-not_character = _{ !character ~ ANY* }
-whitespace = _{ " " | "\t" }
+start = _{ SOI ~ whitespace*  }
+end = _{ whitespace* ~ EOI }
+not_character = _{ !character ~ any* }
+whitespace = { " " | "\t" }
+any = _{ ANY }
 
 the_word_like = { like_only | like_first | like_last | like_else }
 the_word_as = { as_only | as_first | as_last | as_else }
 
-like_only = { SOI ~ "like" ~ EOI }
-like_first = { SOI ~ "like" ~ not_character ~ ANY* ~ EOI }
-like_last = { SOI ~ ANY* ~ not_character ~ "like" ~ EOI }
-like_else = { SOI ~ ANY* ~ not_character ~ "like" ~ not_character ~ ANY* ~ EOI }
+like_only = { start ~ "like" ~ end }
+like_first = { start ~ "like" ~ not_character ~ any* ~ end }
+like_last = { start ~ any* ~ not_character ~ "like" ~ end }
+like_else = { start ~ any* ~ not_character ~ "like" ~ not_character ~ any* ~ end }
 
-as_only = { SOI ~ "as" ~ EOI }
-as_first = { SOI ~ "as" ~ not_character ~ ANY* ~ EOI }
-as_last = { SOI ~ ANY* ~ not_character ~ "as" ~ EOI }
-as_else = { SOI ~ ANY* ~ not_character ~ "as" ~ not_character ~ ANY* ~ EOI }
+as_only = { start ~ "as" ~ end }
+as_first = { start ~ "as" ~ not_character ~ any* ~ end }
+as_last = { start ~ any* ~ not_character ~ "as" ~ end }
+as_else = { start ~ any* ~ not_character ~ "as" ~ not_character ~ any* ~ end }
