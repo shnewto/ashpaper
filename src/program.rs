@@ -8,10 +8,6 @@ use wordsworth;
 #[grammar = "grammar.pest"]
 pub struct AshPaper;
 
-use std::default::Default;
-use std::fmt;
-use std::slice;
-
 pub fn execute(program: &str) {
     let lines: Vec<&str> = program.rsplit(|c| c == '\n' || c == '\r').collect();
 
@@ -21,17 +17,14 @@ pub fn execute(program: &str) {
             .next()
             .unwrap();
 
-        interpret_line(instruction)
+        interpret_instruction(instruction)
     }
 }
 
-fn interpret_line(line: pest::iterators::Pair<'_, Rule>) {
-    interpret_instruction(line.clone(), 0);
-}
-
-fn interpret_instruction(rules: pest::iterators::Pair<'_, Rule>, register: usize) {
+fn interpret_instruction(rules: pest::iterators::Pair<'_, Rule>) {
     let syllables = wordsworth::syllable_counter(rules.as_str());
     let lineclone = rules.clone();
+    let mut register = 0;
     for instruction in rules.into_inner() {
         match instruction.as_rule() {
             Rule::goto => {
@@ -101,12 +94,16 @@ fn interpret_instruction(rules: pest::iterators::Pair<'_, Rule>, register: usize
                 return;
             }
             Rule::noop => {
-                println!("{} -- noop\n\n", lineclone.as_str());
                 return;
             }
+            Rule::register0 => {
+                //
+            }
+            Rule::register1 => {
+                register = 1;
+            }
             _ => {
-                // println!("who knows??: {}\n{:#?}\n", lineclone.as_str(), instruction);
-                interpret_instruction(instruction.clone(), register);
+                interpret_instruction(instruction.clone());
             }
         }
     }

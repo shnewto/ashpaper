@@ -1,6 +1,7 @@
 
 program = {
-    goto
+    (register1 | register0)  ~
+    (goto
     | negate
     | multiply
     | add
@@ -9,8 +10,22 @@ program = {
     | pop
     | push
     | noop
-    | store_syllables
+    | store_syllables)
 }
+
+goto  = { any_not_forward_slash* ~ "/" ~ any* ~ end }
+negate = { any_not_cul* ~ cul ~ any* ~ end }
+multiply = { (uppercase_letter | (any_not_tc* ~ tc)) ~ any* ~ end }
+add = { the_word_like | the_word_as }
+print_value =  { any_not_question* ~ "?" ~ any* ~ end }
+print_register =  { any_not_period* ~ "." ~ any* ~ end }
+pop =  { any_not_comma* ~ "," ~ any* ~ end }
+push =  { any_not_hyphen* ~ "-" ~ any* ~ end }
+noop = { end }
+store_syllables =  { any* ~ end }
+
+register1 = { SOI ~ whitespace+ }
+register0 = { SOI }
 
 cul = _{ character ~ uppercase_letter}
 any_not_cul = _{ !cul ~ any }
@@ -18,61 +33,43 @@ any_not_cul = _{ !cul ~ any }
 tc = _{ whitespace ~ uppercase_letter }
 any_not_tc = _{ !tc ~ any }
 
-goto  = { start ~ any_not_forward_slash* ~ "/" ~ any* ~ end }
-negate = { start ~ any_not_cul* ~ cul ~ any* ~ end }
-multiply = { start ~ (uppercase_letter | (any_not_tc* ~ tc)) ~ any* ~ end }
-add = { the_word_like | the_word_as }
-print_value =  { start ~ any_not_question* ~ "?" ~ any* ~ end }
-print_register =  { start ~ any_not_period* ~ "." ~ any* ~ end }
-pop =  { start ~ any_not_comma* ~ "," ~ any* ~ end }
-push =  { start ~ any_not_hyphen* ~ "-" ~ any* ~ end }
-noop = { start ~ end }
-store_syllables =  { start ~ any* ~ end }
+forward_slash = _{ "/" }
+any_not_forward_slash = _{ !forward_slash ~ any }
 
-words_followed_by_spaces = { whitespace | (character+ ~ whitespace) }
+comma = _{ "," }
+any_not_comma = _{ !comma ~ any }
 
-start_no_whitespace = { SOI }
+period = _{ "." }
+any_not_period = _{ !period ~ any }
 
-uppercase_letter = { UPPERCASE_LETTER }
-any_not_uppercase_letter = { !uppercase_letter ~ any}
+question = _{ "?" }
+any_not_question = _{ !question ~ any }
 
-forward_slash = { "/" }
-any_not_forward_slash = { !forward_slash ~ any }
+hyphen = _{ "-" }
+any_not_hyphen = _{ !hyphen ~ any }
 
-comma = { "," }
-any_not_comma = { !comma ~ any }
+character = _{ LETTER | MARK | NUMBER | PUNCTUATION | SYMBOL }
 
-period = { "." }
-any_not_period = { !period ~ any }
+end = _{ whitespace* ~ EOI }
+any_not_character = _{ !character ~ any }
+uppercase_letter = _{ UPPERCASE_LETTER }
 
-question = { "?" }
-any_not_question = { !question ~ any }
+whitespace = _{ " " | "\t" }
+any = _{ ANY }
 
-hyphen = { "-" }
-any_not_hyphen = { !hyphen ~ any }
+the_word_like = _{ like_only | like_first | like_last | like_else }
+the_word_as = _{ as_only | as_first | as_last | as_else }
 
-character = { LETTER | MARK | NUMBER | PUNCTUATION | SYMBOL }
-start = { SOI ~ whitespace*  }
-end = { whitespace* ~ EOI }
-any_not_character = { !character ~ any }
-any_not_uppercase_letter_character = { !uppercase_letter ~ character}
-
-whitespace = { " " | "\t" }
-any = { ANY }
-
-the_word_like = { like_only | like_first | like_last | like_else }
-the_word_as = { as_only | as_first | as_last | as_else }
-
-any_character_not_uppercase = { !uppercase_letter ~ character }
-word_followed_by_space = { character+ ~ whitespace+ }
+any_character_not_uppercase = _{ !uppercase_letter ~ character }
+word_followed_by_space = _{ character+ ~ whitespace+ }
 
 
-like_only = { start ~ "like" ~ end }
-like_first = { start ~ "like" ~ any_not_character* ~ any* ~ end }
-like_last = { start ~ any* ~ any_not_character* ~ "like" ~ end }
-like_else = { start ~ any* ~ any_not_character* ~ "like" ~ any_not_character* ~ any* ~ end }
+like_only = _{ "like" ~ end }
+like_first = _{ "like" ~ any_not_character* ~ any* ~ end }
+like_last = _{ any* ~ any_not_character* ~ "like" ~ end }
+like_else = _{ any* ~ any_not_character* ~ "like" ~ any_not_character* ~ any* ~ end }
 
-as_only = { start ~ "as" ~ end }
-as_first = { start ~ "as" ~ any_not_character* ~ any* ~ end }
-as_last = { start ~ any* ~ any_not_character* ~ "as" ~ end }
-as_else = { start ~ any* ~ any_not_character* ~ "as" ~ any_not_character* ~ any* ~ end }
+as_only = _{ "as" ~ end }
+as_first = _{ "as" ~ any_not_character* ~ any* ~ end }
+as_last = _{ any* ~ any_not_character* ~ "as" ~ end }
+as_else = _{ any* ~ any_not_character* ~ "as" ~ any_not_character* ~ any* ~ end }
