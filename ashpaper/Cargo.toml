@@ -1,0 +1,22 @@
+[package]
+name = "ashpaper"
+description = "Rust Inpterpreter for Esopo language AshPaper conceived by William Hicks"
+
+authors = ["Shea Newton <shnewto@gmail.com>"]
+
+version = "0.1.0"
+license = "MIT"
+
+homepage = "https://github.com/shnewto/bnf"
+repository = "https://github.com/shnewto/bnf"
+
+keywords = ["esolang", "esopo", "poetry", "interpreter" ]
+
+[lib]
+name = "ashpaper"
+path = "src/lib.rs"
+
+[dependencies]
+wordsworth = "^0.1.0"
+pest = "2.1.2"
+pest_derive = "2.1.0"

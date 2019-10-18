@@ -1,0 +1,11 @@
+[package]
+name = "ashpaper-bin"
+version = "0.1.0"
+authors = ["Shea Newton <sheanewt@gmail.com>"]
+
+[[bin]]
+name = "ashpaper-bin"
+path = "src/main.rs"
+
+[dependencies.ashpaper]
+path = "../ashpaper"
