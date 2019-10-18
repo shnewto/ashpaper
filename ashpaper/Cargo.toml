@@ -9,6 +9,7 @@ license = "MIT"
 
 homepage = "https://github.com/shnewto/bnf"
 repository = "https://github.com/shnewto/bnf"
+readme = "../README.md"
 
 keywords = ["esolang", "esopo", "poetry", "interpreter" ]
 
