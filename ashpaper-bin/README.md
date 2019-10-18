@@ -1,3 +1,6 @@
+[![Crates.io Version](https://img.shields.io/crates/v/ashpaper-bin.svg)](https://crates.io/crates/ashpaper-bin)
+[![Crates.io](https://img.shields.io/crates/d/ashpaper-bin.svg)](https://crates.io/crates/ashpaper-bin)
+
 # ashpaper-bin
 CLI for the [ashpaper crate](https://crates.io/crates/ashpaper), an inpterpreter for Esopo language AshPaper conceived by William Hicks. Now you can run poetry-programs from the command line!
 
