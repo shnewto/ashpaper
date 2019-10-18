@@ -4,7 +4,7 @@ description = "CLI for ashpaper, an inpterpreter for Esopo language AshPaper con
 
 authors = ["Shea Newton <shnewto@gmail.com>"]
 
-version = "0.1.1"
+version = "0.1.2"
 license = "MIT"
 
 homepage = "https://github.com/shnewto/ashpaper"
