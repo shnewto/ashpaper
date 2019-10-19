@@ -4,7 +4,7 @@ use pest::Parser;
 use std::io::{self, BufRead};
 use wordsworth;
 
-type Instuctions<'a> = pest::iterators::Pair<'a, Rule>;
+type Instructions<'a> = pest::iterators::Pair<'a, Rule>;
 
 #[derive(Parser)]
 #[grammar = "grammar.pest"]
@@ -108,20 +108,29 @@ impl Memory {
     }
 }
 
-fn parse(line: &str) -> Instuctions {
+// TODO: define actual error types instead of `()`
+fn parse(line: &str) -> Result<Instructions, ()> {
     AshPaper::parse(Rule::program, line)
-        .unwrap_or_else(|e| panic!("{}", e))
+        .map_err(|_| ())? // ignore pest's custom error type
         .next()
-        .unwrap()
+        .ok_or(())
 }
 
-pub fn execute(program: &str) {
+// TODO: define actual error types instead of `()`
+// TODO (maybe?): instead of printing output of execution,
+// accumulate into a String which is returned in the Result.
+// This would make the output more useable via the API,
+// but I haven't read the paper yet so maybe that's a bad idea.
+pub fn execute(program: &str) -> Result<(), ()> {
     let cursor = io::Cursor::new(program);
     let lines = cursor.lines().map(|l| l.unwrap()).collect::<Vec<String>>();
 
     let mut mem = Memory::new();
 
-    let instructions: Vec<Instuctions> = lines.iter().map(|line| parse(line)).collect();
+    let instructions = lines
+        .iter()
+        .map(|line| parse(line))
+        .collect::<Result<Vec<Instructions>, _>>()?;
     let mut instruction_pointer: usize = 0;
 
     'outer: while let Some(instruction) = instructions.get(instruction_pointer) {
@@ -175,4 +184,6 @@ pub fn execute(program: &str) {
         }
         instruction_pointer += 1;
     }
+
+    Ok(())
 }
