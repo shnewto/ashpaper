@@ -2,9 +2,9 @@
 name = "ashpaper"
 description = "Rust Inpterpreter for Esopo language AshPaper conceived by William Hicks"
 
-authors = ["Shea Newton <shnewto@gmail.com>"]
+authors = ["Shea Newton <shnewto@gmail.com>", "@CrockAgile"]
 
-version = "0.1.3"
+version = "0.1.4"
 license = "MIT"
 
 homepage = "https://github.com/shnewto/ashpaper"
