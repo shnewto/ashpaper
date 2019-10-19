@@ -187,3 +187,94 @@ pub fn execute(program: &str) -> Result<(), ()> {
 
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn check_instruction_qualifier(rule: Rule, program: &str) {
+        let res = parse(program)
+            .unwrap()
+            .into_inner()
+            .nth(0)
+            .unwrap()
+            .as_rule();
+        assert_eq!(res, rule)
+    }
+
+    #[test]
+    fn noop() {
+        check_instruction_qualifier(Rule::noop, "")
+    }
+
+    #[test]
+    fn comment() {
+        check_instruction_qualifier(Rule::comment, ";;")
+    }
+
+    #[test]
+    fn register_0() {
+        check_instruction_qualifier(Rule::register0, "no leading whitespace")
+    }
+
+    #[test]
+    fn register_1() {
+        check_instruction_qualifier(Rule::register1, " leading whitespace")
+    }
+
+    fn check_instruction(rule: Rule, program: &str) {
+        let res = parse(program)
+            .unwrap()
+            .into_inner()
+            .nth(1)
+            .unwrap()
+            .as_rule();
+        assert_eq!(rule, res)
+    }
+
+    #[test]
+    fn goto() {
+        check_instruction(Rule::goto, "/")
+    }
+
+    #[test]
+    fn negate() {
+        check_instruction(Rule::negate, "aB")
+    }
+
+    #[test]
+    fn multiply() {
+        check_instruction(Rule::multiply, "B")
+    }
+
+    #[test]
+    fn add() {
+        check_instruction(Rule::add, "like");
+        check_instruction(Rule::add, "as");
+    }
+
+    #[test]
+    fn print_char() {
+        check_instruction(Rule::print_char, "?")
+    }
+
+    #[test]
+    fn print_value() {
+        check_instruction(Rule::print_value, ".")
+    }
+
+    #[test]
+    fn pop() {
+        check_instruction(Rule::pop, ",")
+    }
+
+    #[test]
+    fn push() {
+        check_instruction(Rule::push, "-")
+    }
+
+    #[test]
+    fn store_syllables() {
+        check_instruction(Rule::store_syllables, "12345")
+    }
+}
