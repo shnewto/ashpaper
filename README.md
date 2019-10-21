@@ -48,5 +48,4 @@ And it will print the following to stdout:
 
 ## Some caveats about compliance with the informal spec
 - It's entirely possible at this point that some of my implementation deviates from the spec in unintended ways. If you spot anything like that, please raise an issue :heart: :heart:
-- As I've read it, the rule for 'storing syllables' used in the title has less precedence that the rest of the rules, that means, for a program to successfully consume input, there must be no others instructions present.
 - The alliteration and rhyming rules are still unimplemented.
