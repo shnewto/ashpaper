@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/shnewto/ashpaper.svg?branch=master)](https://travis-ci.org/shnewto/ashpaper)
+[![codecov](https://codecov.io/gh/shnewto/ashpaper/branch/master/graph/badge.svg)](https://codecov.io/gh/shnewto/ashpaper)
 [![Crates.io Version](https://img.shields.io/crates/v/ashpaper.svg)](https://crates.io/crates/ashpaper)
 [![Crates.io](https://img.shields.io/crates/d/ashpaper.svg)](https://crates.io/crates/ashpaper)
 
@@ -56,7 +57,12 @@ use std::fs;
 pub fn main() {
     let fname = "lovely-poem.eso";
     let contents = fs::read_to_string(fname).expect("Something went wrong reading input file!");
-    ashpaper::program::execute(&contents);
+    if let Ok(res) = ashpaper::program::execute(&contents) {
+        print!("{}", res);
+    } else {
+        // TODO: really need some helpful error reporting
+        eprintln!("Error executing program!");
+    }
 }
 ```
 
