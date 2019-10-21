@@ -9,6 +9,11 @@ matrix:
   allow_failures:
     - rust: nightly
 
+addons:
+    apt:
+        packages:
+            - libssl-dev
+
 branches:
   only:
   - master
@@ -17,3 +22,10 @@ script:
   - cargo build --verbose --all
   - cargo test --verbose --all
   - cargo run ashpaper-bin/poems/lovely-poem.eso
+
+after_success: |
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+    cargo install cargo-tarpaulin &&
+    cargo tarpaulin --no-count --skip-clean --out Xml &&
+    bash <(curl -s https://codecov.io/bash)
+  fi
