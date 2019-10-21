@@ -121,11 +121,13 @@ fn parse(line: &str) -> Result<Instructions, ()> {
 // accumulate into a String which is returned in the Result.
 // This would make the output more useable via the API,
 // but I haven't read the paper yet so maybe that's a bad idea.
-pub fn execute(program: &str) -> Result<(), ()> {
+pub fn execute(program: &str) -> Result<String, ()> {
     let cursor = io::Cursor::new(program);
     let lines = cursor.lines().map(|l| l.unwrap()).collect::<Vec<String>>();
 
     let mut mem = Memory::new();
+
+    let mut output: String = String::new();
 
     let instructions = lines
         .iter()
@@ -158,10 +160,10 @@ pub fn execute(program: &str) -> Result<(), ()> {
                     let active = mem.get_active();
                     let truncated = active % std::u8::MAX as usize;
                     let printable = truncated as u8;
-                    println!("{}", printable as char);
+                    output = format!("{}{}", output, printable as char);
                 }
                 Rule::print_value => {
-                    println!("{}", mem.get_active());
+                    output = format!("{}{}", output, mem.get_active());
                 }
                 Rule::pop => {
                     mem.pop();
@@ -185,7 +187,7 @@ pub fn execute(program: &str) -> Result<(), ()> {
         instruction_pointer += 1;
     }
 
-    Ok(())
+    Ok(output)
 }
 
 #[cfg(test)]
@@ -299,5 +301,34 @@ mod tests {
     #[test]
     fn store_syllables() {
         check_instruction(Rule::store_syllables, "12345")
+    }
+
+    #[test]
+    fn factorial() {
+        let factorial_program = "
+
+  it is a calculator, like a
+      poem, is a poem, and finds
+        factori-
+          als
+  The input is the syllAbles
+in the title, count them, as one counts
+  (q) what other poem, programs can be writ
+  (a) anything a Turing
+    machine-machine-machine
+    would do
+re/cur
+    sion works too, in poems, programs, and this
+       a lovely.
+poem or a calculator or nothing
+how lovely can it be?
+";
+        let four_factorial = format!("lovely poem\n{}", factorial_program);
+        let four_factorial_res = "24\n".to_string();
+        assert_eq!(execute(&four_factorial), Ok(four_factorial_res));
+
+        let five_factorial = format!("lovely poem and\n{}", factorial_program);
+        let five_factorial_res = "120\n".to_string();
+        assert_eq!(execute(&five_factorial), Ok(five_factorial_res));
     }
 }
