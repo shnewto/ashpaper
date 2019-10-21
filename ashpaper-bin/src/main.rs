@@ -42,6 +42,7 @@ use clap::App;
 
 use std::fs;
 
+#[cfg_attr(tarpaulin, skip)]
 pub fn main() {
     let matches = App::new("ashpaper")
         .version("0.1.4")
