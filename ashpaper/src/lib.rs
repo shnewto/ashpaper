@@ -47,8 +47,7 @@
 /// ```
 ///
 /// ## Some caveats about compliance with the informal spec
-/// - The wording around when to use a specific register vs. the active register has lead me to make some choices. While I've attempted to reproduce the behavior of the author's implementation, you may discover that it deviates. If you do, please raise an issue :heart: :heart:
-/// - There are rules for the words 'like' and 'as' that I've taken to mean simply the presence of the patterns 'like' or 'as'. So the rule for 'like' has the potential to match 'likes' and 'has' to match the rule for 'as' (barring any other rule that takes precedence).
+/// - It's entirely possible at this point that some of my implementation deviates from the spec in unintended ways. If you spot anything like that, please raise an issue :heart: :heart:
 /// - Comments are not a part of the spec but are implemented in this version. They are denoted by lines beginning with the `;;` characters. For now, they will have an effect on the execution unless they are put at the end of the source file.
 /// - As I've read it, the rule for 'storing syllables' used in the title has less precedence that the rest of the rules, that means, for a program to successfully consume input, there must be no others instructions present.
 /// - The alliteration and rhyming rules are still unimplemented.

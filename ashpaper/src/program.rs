@@ -232,6 +232,16 @@ mod tests {
         assert_eq!(rule, res)
     }
 
+    fn check_not_instruction(rule: Rule, program: &str) {
+        let res = parse(program)
+            .unwrap()
+            .into_inner()
+            .nth(1)
+            .unwrap()
+            .as_rule();
+        assert_ne!(rule, res)
+    }
+
     #[test]
     fn goto() {
         check_instruction(Rule::goto, "/")
@@ -248,9 +258,27 @@ mod tests {
     }
 
     #[test]
-    fn add() {
+    fn like_add() {
         check_instruction(Rule::add, "like");
+        check_instruction(Rule::add, "like at the start");
+        check_instruction(Rule::add, "at the end like");
+        check_instruction(Rule::add, "word like in the mix");
+        check_instruction(Rule::add, "word \"like\" in quotes");
+
+        check_not_instruction(Rule::add, "likes does not count");
+        check_not_instruction(Rule::add, "and not this either abdlikedef");
+    }
+
+    #[test]
+    fn as_add() {
         check_instruction(Rule::add, "as");
+        check_instruction(Rule::add, "as at the start");
+        check_instruction(Rule::add, "at the end as");
+        check_instruction(Rule::add, "word as in the mix");
+        check_instruction(Rule::add, "word \"as\" in quotes");
+
+        check_not_instruction(Rule::add, "ass does not count");
+        check_not_instruction(Rule::add, "and not this either abdasdef");
     }
 
     #[test]
