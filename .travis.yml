@@ -16,3 +16,4 @@ branches:
 script:
   - cargo build --verbose --all
   - cargo test --verbose --all
+  - cargo run ashpaper-bin/poems/lovely-poem.eso
