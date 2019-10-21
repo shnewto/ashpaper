@@ -57,7 +57,12 @@ use std::fs;
 pub fn main() {
     let fname = "lovely-poem.eso";
     let contents = fs::read_to_string(fname).expect("Something went wrong reading input file!");
-    ashpaper::program::execute(&contents);
+    if let Ok(res) = ashpaper::program::execute(&contents) {
+        print!("{}", res);
+    } else {
+        // TODO: really need some helpful error reporting
+        eprintln!("Error executing program!");
+    }
 }
 ```
 

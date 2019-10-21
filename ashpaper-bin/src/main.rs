@@ -4,7 +4,7 @@
 /// ## Usage
 ///
 /// Take the following "poegram" called 'lovely-poem.eso' (in this repositories poetry directory):
-/// ```ignore
+/// ```txt
 /// lovely poem
 ///   it is a calculator, like a
 ///       poem, is a poem, and finds
@@ -28,12 +28,12 @@
 /// ```
 ///
 /// You can run it with:
-/// ```ignore
-/// ashpaper-bin lovely-poem.eso
+/// ```bash
+/// ashpaper-bin ashpaper-bin/poems/lovely-poem.eso
 /// ```
 ///
 /// And it will produce the output:
-/// ```ignore
+/// ```txt
 /// 24
 /// ```
 extern crate ashpaper;

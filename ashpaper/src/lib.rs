@@ -5,8 +5,8 @@
 ///
 /// You can execute poetry!
 ///
-/// Let's take this poem in a file called lovely-poem.eso.This poem-program (poegram?) calculates factorials and input in the number of syllables in the title. (I learned a lot from reading the poem "other woodwork" by William Hicks)
-/// ```ignore
+/// Let's take this poem that calculates factorials and input in the number of syllables in the title. (I learned a lot from reading the poem "other woodwork" by William Hicks)
+/// ```txt
 /// lovely poem
 ///
 ///   it is a calculator, like a
@@ -26,20 +26,41 @@
 /// how lovely can it be?
 /// ```
 /// Using this library, you can run it with a program that looked like this:
-/// ```ignore
+/// ```rust
 /// extern crate ashpaper;
 ///
 /// use std::fs;
 ///
 /// pub fn main() {
-///     let fname = "lovely-poem.eso";
-///     let contents = fs::read_to_string(fname).expect("Something went wrong reading input file!");
-///     ashpaper::program::execute(&contents);
+///    let contents = "
+///lovely poem
+///
+///  it is a calculator, like a
+///      poem, is a poem, and finds
+///        factori-
+///          als
+///  The input is the syllAbles
+///in the title, count them, as one counts
+///  (q) what other poem, programs can be writ
+///  (a) anything a Turing
+///    machine-machine-machine
+///    would do
+///re/cur
+///    sion works too, in poems, programs, and this
+///       a lovely.
+///poem or a calculator or nothing
+///how lovely can it be?
+///                    ";
+///    if let Ok(res) = ashpaper::program::execute(&contents) {
+///        print!("{}", res);
+///    } else {
+///        eprintln!("Error executing program!");
+///    }
 /// }
 /// ```
 ///
 /// And it will produce the output:
-/// ```ignore
+/// ```txt
 /// 24
 /// ```
 ///
