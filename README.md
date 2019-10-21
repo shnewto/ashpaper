@@ -10,7 +10,7 @@ An inpterpreter for the Esopo language AshPaper conceived by [William Hicks](htt
 Poetry is your program.
 
 You have two registers at your disposal, r0 and r1 which store signed integers (`i64`).
-You also have a boundles stack which can store signed integers.
+You also have an stack which can store signed integers (bounds are only that of `Vec<i64>`).
 
 Here are the instructions at your disposal (in order that they get precedence):
 - _End rhyme with previous line_: Unimplemented.
