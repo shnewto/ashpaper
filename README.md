@@ -7,7 +7,25 @@ An inpterpreter for the Esopo language AshPaper conceived by [William Hicks](htt
 
 ## How it works
 
-You can execute poetry!
+Poetry is your program.
+
+You have two registers at your disposal, r0 and r1 which store signed integers (`i64`).
+You also have a boundles stack which can store signed integers.
+
+Here's are the instructions at your disposal (in order that they get precedence):
+- _End rhyme with previous line_: Unimplemented.
+- Line contains `/`: If the value in the active register is greater than the number of syllables in the line, go to the line number that corresponds to the value in the **non-active** register. If abs(n) <= lines then n, else n % lines.
+- _Capital letter appears inside a word_: Negate the active register.
+- _Capital letter appears at the beginning of a word_: Multiply registers and store result in the active register.
+- _the words 'like' or 'as' appear_: Add registers and store in the active register.
+- _Line contains `?`_: Print ASCII character associated with value of the active register. If abs(n) <= u8::MAX n, else n % u8::MAX.
+- _Line contains `.`_: Print integer value of the acvtive register.
+- _Line contains `,`_: Pop from the stack and store in the active register.
+- _Line contains `-`_: Push the value of the active register to the stack.
+- _Alleteration of consecutive words: Unimplemented.
+- _Blank line_: no-op.
+- _Everything else_: Store number of syllables in the line to the active register.
+
 
 Let's take this poem in a file called lovely-poem.eso.This poem-program (poegram?) calculates factorials and input in the number of syllables in the title. (I learned a lot from reading the poem "other woodwork" by William Hicks)
 ```ignore
