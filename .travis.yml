@@ -1,10 +1,5 @@
 sudo: required
 language: rust
-cache:
-  directories:
-    - /home/travis/.cargo
-before_cache:
-  - rm -rf /home/travis/.cargo/registry
 rust:
   - stable
   - beta
@@ -12,24 +7,28 @@ rust:
 matrix:
   allow_failures:
     - rust: nightly
-
 addons:
     apt:
         packages:
             - libssl-dev
-
 branches:
   only:
   - master
 
-script:
-  - cargo build --verbose --all
-  - cargo test --verbose --all
-  - cargo run ashpaper-bin/poems/lovely-poem.eso
+before_install:
+  - curl -L https://github.com/mozilla/grcov/releases/latest/download/grcov-linux-x86_64.tar.bz2 | tar jxf -
 
-after_success: |
-  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
-    if ! [ -x "$(command -v cargo-tarpaulin)" ]; then cargo install cargo-tarpaulin; fi &&
-    cargo tarpaulin --ignore-tests --out Xml &&
-    bash <(curl -s https://codecov.io/bash)
-  fi
+script:
+  - |
+    if [[ "$TRAVIS_RUST_VERSION" == nightly ]]; then
+      export CARGO_INCREMENTAL=0;
+      export RUSTFLAGS="-Zprofile -Ccodegen-units=1 -Cinline-threshold=0 -Clink-dead-code -Coverflow-checks=off -Zno-landing-pads";
+      cargo build --verbose $CARGO_OPTIONS;
+      cargo test --verbose $CARGO_OPTIONS;
+      zip -0 ccov.zip `find . \( -name "ashpaper*.gc*" \) -print`;
+      ./grcov ccov.zip -s . -t lcov --llvm --branch --ignore-not-existing --ignore "/*" -o lcov.info;
+      bash <(curl -s https://codecov.io/bash) -f lcov.info;
+    else
+      cargo build --verbose --all
+      cargo test --verbose --all
+    fi
