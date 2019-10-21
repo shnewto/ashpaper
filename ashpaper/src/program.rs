@@ -210,11 +210,6 @@ mod tests {
     }
 
     #[test]
-    fn comment() {
-        check_instruction_qualifier(Rule::comment, ";;")
-    }
-
-    #[test]
     fn register_0() {
         check_instruction_qualifier(Rule::register0, "no leading whitespace")
     }

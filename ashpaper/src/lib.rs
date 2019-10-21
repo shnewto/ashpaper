@@ -5,7 +5,7 @@
 ///
 /// You can execute poetry!
 ///
-/// Let's take this poem in a file called lovely-poem.eso:
+/// Let's take this poem in a file called lovely-poem.eso.This poem-program (poegram?) calculates factorials and input in the number of syllables in the title. (I learned a lot from reading the poem "other woodwork" by William Hicks)
 /// ```ignore
 /// lovely poem
 ///   it is a calculator, like a
@@ -23,10 +23,6 @@
 ///        a lovely.
 /// poem or calculator or nothing
 /// how lovely can it be?
-///
-/// ;; This poem-program (poegram?) calculates factorials.
-/// ;; (I learned a lot from reading the poem "other woodwork" by William Hicks)
-/// ;; Input is the number of syllables in the title.
 /// ```
 /// Using this library, you can run it with a program that looked like this:
 /// ```ignore
@@ -48,8 +44,6 @@
 ///
 /// ## Some caveats about compliance with the informal spec
 /// - It's entirely possible at this point that some of my implementation deviates from the spec in unintended ways. If you spot anything like that, please raise an issue :heart: :heart:
-/// - Comments are not a part of the spec but are implemented in this version. They are denoted by lines beginning with the `;;` characters. For now, they will have an effect on the execution unless they are put at the end of the source file.
-/// - As I've read it, the rule for 'storing syllables' used in the title has less precedence that the rest of the rules, that means, for a program to successfully consume input, there must be no others instructions present.
 /// - The alliteration and rhyming rules are still unimplemented.
 extern crate pest;
 #[macro_use]
