@@ -12,9 +12,9 @@ pub struct AshPaper;
 
 #[derive(Debug, Clone)]
 struct Memory {
-    register0: usize,
-    register1: usize,
-    stack: Vec<usize>,
+    register0: i64,
+    register1: i64,
+    stack: Vec<i64>,
     active: Register,
 }
 
@@ -34,7 +34,7 @@ impl Memory {
         }
     }
 
-    fn store_syllables(&mut self, syllables: usize) {
+    fn store_syllables(&mut self, syllables: i64) {
         match self.active {
             Register::Register0 => self.register0 = syllables,
             Register::Register1 => self.register1 = syllables,
@@ -60,10 +60,10 @@ impl Memory {
     fn multiply(&mut self) {
         match self.active {
             Register::Register0 => {
-                self.register0 = self.register0.wrapping_mul(self.register1);
+                self.register0 *= self.register1;
             }
             Register::Register1 => {
-                self.register1 = self.register1.wrapping_mul(self.register0);
+                self.register1 *= self.register0;
             }
         }
     }
@@ -71,22 +71,22 @@ impl Memory {
     fn add(&mut self) {
         match self.active {
             Register::Register0 => {
-                self.register0 = self.register0.wrapping_add(self.register1);
+                self.register0 += self.register1;
             }
             Register::Register1 => {
-                self.register1 = self.register1.wrapping_add(self.register0);
+                self.register1 += self.register0;
             }
         }
     }
 
-    fn get_active(&self) -> usize {
+    fn get_active(&self) -> i64 {
         match self.active {
             Register::Register0 => self.register0,
             Register::Register1 => self.register1,
         }
     }
 
-    fn get_inactive(&self) -> usize {
+    fn get_inactive(&self) -> i64 {
         match self.active {
             Register::Register0 => self.register1,
             Register::Register1 => self.register0,
@@ -95,14 +95,11 @@ impl Memory {
 
     fn negate(&mut self) {
         match self.active {
-            // We can't negate something we can feasibly convert to
-            // a character or use to access a position in a vector.
-            // For now we're emulating a 'negate' by wrapping around.
             Register::Register0 => {
-                self.register0 = self.register0.wrapping_neg();
+                self.register0 = -self.register0;
             }
             Register::Register1 => {
-                self.register1 = self.register1.wrapping_neg();
+                self.register1 = -self.register1;
             }
         }
     }
@@ -136,13 +133,15 @@ pub fn execute(program: &str) -> Result<String, ()> {
     let mut instruction_pointer: usize = 0;
 
     'outer: while let Some(instruction) = instructions.get(instruction_pointer) {
-        let syllables = wordsworth::syllable_counter(instruction.as_str()) as usize;
+        let syllables = i64::from(wordsworth::syllable_counter(instruction.as_str()));
 
         for instruction in instruction.clone().into_inner() {
             match instruction.as_rule() {
                 Rule::goto => {
                     if mem.get_active() > syllables {
-                        instruction_pointer = mem.get_inactive() % instructions.len();
+                        instruction_pointer = ((mem.get_inactive().abs() as u64)
+                            % (instructions.len() as u64))
+                            as usize;
                         continue 'outer;
                     }
                 }
@@ -156,10 +155,7 @@ pub fn execute(program: &str) -> Result<String, ()> {
                     mem.add();
                 }
                 Rule::print_char => {
-                    // :shrug: print a non-existant ascii value?
-                    let active = mem.get_active();
-                    let truncated = active % std::u8::MAX as usize;
-                    let printable = truncated as u8;
+                    let printable = (mem.get_active().abs() as u64 % u64::from(std::u8::MAX)) as u8;
                     output = format!("{}{}", output, printable as char);
                 }
                 Rule::print_value => {

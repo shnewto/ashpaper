@@ -9,6 +9,11 @@ matrix:
   allow_failures:
     - rust: nightly
 
+branches:
+  only:
+  - master
+
 script:
   - cargo build --verbose --all
   - cargo test --verbose --all
+  - cargo run ashpaper-bin/poems/lovely-poem.eso

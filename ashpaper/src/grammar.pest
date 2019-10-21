@@ -27,7 +27,7 @@ print_char =  { any_not_question* ~ question ~ any* ~ end }
 print_value =  { any_not_dot* ~ dot ~ any* ~ end }
 pop =  { any_not_comma* ~ comma ~ any* ~ end }
 push =  { any_not_hyphen* ~ hyphen ~ any* ~ end }
-noop = { start ~ end }
+noop = { start ~ whitespace* ~ end }
 store_syllables =  { any+ }
 
 forward_slash = _{ "/" }
