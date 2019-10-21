@@ -302,4 +302,33 @@ mod tests {
     fn store_syllables() {
         check_instruction(Rule::store_syllables, "12345")
     }
+
+    #[test]
+    fn factorial() {
+        let factorial_program = "
+
+  it is a calculator, like a
+      poem, is a poem, and finds
+        factori-
+          als
+  The input is the syllAbles
+in the title, count them, as one counts
+  (q) what other poem, programs can be writ
+  (a) anything a Turing
+    machine-machine-machine
+    would do
+re/cur
+    sion works too, in poems, programs, and this
+       a lovely.
+poem or a calculator or nothing
+how lovely can it be?
+";
+        let four_factorial = format!("lovely poem\n{}", factorial_program);
+        let four_factorial_res = "24\n".to_string();
+        assert_eq!(execute(&four_factorial), Ok(four_factorial_res));
+
+        let five_factorial = format!("lovely poem and\n{}", factorial_program);
+        let five_factorial_res = "120\n".to_string();
+        assert_eq!(execute(&five_factorial), Ok(five_factorial_res));
+    }
 }

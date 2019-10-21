@@ -6,6 +6,7 @@
 /// Take the following "poegram" called 'lovely-poem.eso' (in this repositories poetry directory):
 /// ```ignore
 /// lovely poem
+///
 ///   it is a calculator, like a
 ///       poem, is a poem, and finds
 ///         factori-
@@ -19,12 +20,8 @@
 /// re/cur
 ///     sion works too, in poems, programs, and this
 ///        a lovely.
-/// poem or calculator or nothing
+/// poem or a calculator or nothing
 /// how lovely can it be?
-///
-/// ;; This poem-program (poegram?) calculates factorials.
-/// ;; (I learned a lot from reading the poem 'other woodwork' by William Hicks)
-/// ;; Input is the number of syllables in the title.
 /// ```
 ///
 /// You can run it with:
@@ -53,5 +50,10 @@ pub fn main() {
     let fname = matches.value_of("INPUT").unwrap();
     let contents = fs::read_to_string(fname).expect("Something went wrong reading input file!");
 
-    ashpaper::program::execute(&contents).ok(); // ignore until we're returning errors
+    if let Ok(res) = ashpaper::program::execute(&contents) {
+        print!("{}", res);
+    } else {
+        // TODO: really need some helpful error reporting
+        eprintln!("Error executing program!");
+    }
 }
