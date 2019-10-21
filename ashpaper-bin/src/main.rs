@@ -44,7 +44,7 @@ use std::fs;
 
 pub fn main() {
     let matches = App::new("ashpaper")
-        .version("0.1.3")
+        .version("0.1.4")
         .author("Shea Newton <shnewto@gmail.com>")
         .about("An AshPaper interpreter that executes poetry!")
         .args_from_usage("<INPUT>    '.eso file to compile'")
@@ -53,5 +53,10 @@ pub fn main() {
     let fname = matches.value_of("INPUT").unwrap();
     let contents = fs::read_to_string(fname).expect("Something went wrong reading input file!");
 
-    ashpaper::program::execute(&contents).ok(); // ignore until we're returning errors
+    if let Ok(res) = ashpaper::program::execute(&contents) {
+        print!("{}", res);
+    } else {
+        // TODO: really need some helpful error reporting
+        eprintln!("Error executing program!");
+    }
 }
