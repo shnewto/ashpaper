@@ -18,7 +18,7 @@ struct Memory {
     active: Register,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Copy)]
 enum Register {
     Register0,
     Register1,
@@ -59,23 +59,15 @@ impl Memory {
 
     fn multiply(&mut self) {
         match self.active {
-            Register::Register0 => {
-                self.register0 *= self.register1;
-            }
-            Register::Register1 => {
-                self.register1 *= self.register0;
-            }
+            Register::Register0 => self.register0 *= self.register1,
+            Register::Register1 => self.register1 *= self.register0,
         }
     }
 
     fn add(&mut self) {
         match self.active {
-            Register::Register0 => {
-                self.register0 += self.register1;
-            }
-            Register::Register1 => {
-                self.register1 += self.register0;
-            }
+            Register::Register0 => self.register0 += self.register1,
+            Register::Register1 => self.register1 += self.register0,
         }
     }
 
@@ -95,12 +87,8 @@ impl Memory {
 
     fn negate(&mut self) {
         match self.active {
-            Register::Register0 => {
-                self.register0 = -self.register0;
-            }
-            Register::Register1 => {
-                self.register1 = -self.register1;
-            }
+            Register::Register0 => self.register0 = -self.register0,
+            Register::Register1 => self.register1 = -self.register1,
         }
     }
 }
@@ -202,17 +190,23 @@ mod tests {
 
     #[test]
     fn noop() {
-        check_instruction_qualifier(Rule::noop, "")
+        let instruction = "";
+        check_instruction_qualifier(Rule::noop, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     #[test]
     fn register_0() {
-        check_instruction_qualifier(Rule::register0, "no leading whitespace")
+        let instruction = "no leading whitespace";
+        check_instruction_qualifier(Rule::register0, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     #[test]
     fn register_1() {
-        check_instruction_qualifier(Rule::register1, " leading whitespace")
+        let instruction = " leading whitespace";
+        check_instruction_qualifier(Rule::register1, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     fn check_instruction(rule: Rule, program: &str) {
@@ -237,66 +231,181 @@ mod tests {
 
     #[test]
     fn goto() {
-        check_instruction(Rule::goto, "/")
+        let mut instruction = "/";
+        check_instruction(Rule::goto, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = " /";
+        check_instruction(Rule::goto, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     #[test]
     fn negate() {
-        check_instruction(Rule::negate, "aB")
+        let mut instruction = "aB";
+        check_instruction(Rule::negate, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = " aB";
+        check_instruction(Rule::negate, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     #[test]
     fn multiply() {
-        check_instruction(Rule::multiply, "B")
+        let mut instruction = "B";
+        check_instruction_qualifier(Rule::register0, instruction);
+        check_instruction(Rule::multiply, instruction);
+        instruction = " B";
+        check_instruction_qualifier(Rule::register1, instruction);
+        check_instruction(Rule::multiply, instruction);
+
+        let mut mem = Memory::new();
+        mem.active = Register::Register0;
+        mem.multiply();
+        mem.active = Register::Register1;
+        mem.multiply();
     }
 
     #[test]
     fn like_add() {
-        check_instruction(Rule::add, "like");
-        check_instruction(Rule::add, "like at the start");
-        check_instruction(Rule::add, "at the end like");
-        check_instruction(Rule::add, "word like in the mix");
-        check_instruction(Rule::add, "word \"like\" in quotes");
+        let mut instruction = "like";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = " like";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "like at the start";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "at the end like";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "word like in the mix";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "word \"like\" in quotes";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
 
-        check_not_instruction(Rule::add, "likes does not count");
-        check_not_instruction(Rule::add, "and not this either abdlikedef");
+        instruction = "blike does not count";
+        check_not_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "likes does not count";
+        check_not_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "and not this either abdlikedef";
+        check_not_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     #[test]
     fn as_add() {
-        check_instruction(Rule::add, "as");
-        check_instruction(Rule::add, "as at the start");
-        check_instruction(Rule::add, "at the end as");
-        check_instruction(Rule::add, "word as in the mix");
-        check_instruction(Rule::add, "word \"as\" in quotes");
+        let mut instruction = "as";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = " as";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "as at the start";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "at the end as";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "word as in the mix";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "word \"as\" in quotes";
+        check_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
 
-        check_not_instruction(Rule::add, "ass does not count");
-        check_not_instruction(Rule::add, "and not this either abdasdef");
+        instruction = "has does not count";
+        check_not_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "asi does not count";
+        check_not_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = "and not this either abdasdef";
+        check_not_instruction(Rule::add, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     #[test]
     fn print_char() {
-        check_instruction(Rule::print_char, "?")
+        let mut instruction = "?";
+        check_instruction(Rule::print_char, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = " ?";
+        check_instruction(Rule::print_char, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     #[test]
     fn print_value() {
-        check_instruction(Rule::print_value, ".")
+        let mut instruction = ".";
+        check_instruction(Rule::print_value, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = " .";
+        check_instruction(Rule::print_value, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     #[test]
     fn pop() {
-        check_instruction(Rule::pop, ",")
+        let mut instruction = ",";
+        check_instruction(Rule::pop, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = " ,";
+        check_instruction(Rule::pop, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     #[test]
     fn push() {
-        check_instruction(Rule::push, "-")
+        let mut instruction = "-";
+        check_instruction(Rule::push, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = " -";
+        check_instruction(Rule::push, instruction);
+        assert!(execute(instruction).is_ok());
     }
 
     #[test]
     fn store_syllables() {
-        check_instruction(Rule::store_syllables, "12345")
+        let mut instruction = "12345";
+        check_instruction(Rule::store_syllables, instruction);
+        assert!(execute(instruction).is_ok());
+        instruction = " 12345";
+        check_instruction(Rule::store_syllables, instruction);
+        assert!(execute(instruction).is_ok());
+    }
+
+    #[test]
+    fn mem_get_inactive() {
+        let mut mem = Memory::new();
+        let r0 = 10;
+        let r1 = 11;
+        mem.active = Register::Register0;
+        mem.store_syllables(r0);
+        mem.active = Register::Register1;
+        mem.store_syllables(r1);
+
+        mem.active = Register::Register0;
+        assert_eq!(mem.get_inactive(), r1);
+        mem.active = Register::Register1;
+        assert_eq!(mem.get_inactive(), r0);
+    }
+
+    #[test]
+    fn mem_push() {
+        let mut mem = Memory::new();
+        mem.active = Register::Register0;
+        mem.store_syllables(1);
+        mem.push();
+        assert_eq!(mem.stack, vec![1]);
+        mem.active = Register::Register1;
+        mem.store_syllables(2);
+        mem.push();
+        assert_eq!(mem.stack, vec![1, 2]);
     }
 
     #[test]
