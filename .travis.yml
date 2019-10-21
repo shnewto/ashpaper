@@ -26,6 +26,6 @@ script:
 after_success: |
   if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
     cargo install cargo-tarpaulin &&
-    cargo tarpaulin --no-count --skip-clean --out Xml &&
+    cargo tarpaulin --out Xml &&
     bash <(curl -s https://codecov.io/bash)
   fi

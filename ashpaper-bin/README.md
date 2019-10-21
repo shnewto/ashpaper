@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/shnewto/ashpaper.svg?branch=master)](https://travis-ci.org/shnewto/ashpaper)
 [![Crates.io Version](https://img.shields.io/crates/v/ashpaper-bin.svg)](https://crates.io/crates/ashpaper-bin)
 [![Crates.io](https://img.shields.io/crates/d/ashpaper-bin.svg)](https://crates.io/crates/ashpaper-bin)
 
