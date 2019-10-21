@@ -18,5 +18,5 @@ name = "ashpaper-bin"
 path = "src/main.rs"
 
 [dependencies]
-ashpaper = "0.1.4"
+ashpaper = "0.2.4"
 clap = "2.33.0"
