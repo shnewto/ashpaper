@@ -1,6 +1,6 @@
 
 program = {
-    comment | instruction | noop
+    instruction | noop
 }
 
 instruction = _{
@@ -87,8 +87,6 @@ any_not_hyphen = _{ !hyphen ~ any }
 start = _{ SOI }
 
 end = _{ whitespace* ~ EOI }
-
-comment = { start ~ whitespace* ~ ";;" ~ any* ~ end }
 
 character = _{ ASCII_ALPHANUMERIC | "." | "_" | "/" }
 any_not_character = _{ !character ~ any }
