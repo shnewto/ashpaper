@@ -121,7 +121,7 @@ fn parse(line: &str) -> Result<Instructions, ()> {
 // accumulate into a String which is returned in the Result.
 // This would make the output more useable via the API,
 // but I haven't read the paper yet so maybe that's a bad idea.
-pub fn execute(program: &str) -> Result<(String), ()> {
+pub fn execute(program: &str) -> Result<String, ()> {
     let cursor = io::Cursor::new(program);
     let lines = cursor.lines().map(|l| l.unwrap()).collect::<Vec<String>>();
 
