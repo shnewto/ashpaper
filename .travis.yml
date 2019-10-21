@@ -1,6 +1,10 @@
 sudo: required
 language: rust
-cache: cargo
+cache:
+  directories:
+    - /home/travis/.cargo
+before_cache:
+  - rm -rf /home/travis/.cargo/registry
 rust:
   - stable
   - beta
@@ -8,6 +12,11 @@ rust:
 matrix:
   allow_failures:
     - rust: nightly
+
+addons:
+    apt:
+        packages:
+            - libssl-dev
 
 branches:
   only:
@@ -17,3 +26,10 @@ script:
   - cargo build --verbose --all
   - cargo test --verbose --all
   - cargo run ashpaper-bin/poems/lovely-poem.eso
+
+after_success: |
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+    if ! [ -x "$(command -v cargo-tarpaulin)" ]; then cargo install cargo-tarpaulin; fi &&
+      cargo tarpaulin --out Xml &&
+      bash <(curl -s https://codecov.io/bash)
+    fi
