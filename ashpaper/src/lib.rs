@@ -8,6 +8,7 @@
 /// Let's take this poem in a file called lovely-poem.eso.This poem-program (poegram?) calculates factorials and input in the number of syllables in the title. (I learned a lot from reading the poem "other woodwork" by William Hicks)
 /// ```ignore
 /// lovely poem
+///
 ///   it is a calculator, like a
 ///       poem, is a poem, and finds
 ///         factori-
@@ -21,7 +22,7 @@
 /// re/cur
 ///     sion works too, in poems, programs, and this
 ///        a lovely.
-/// poem or calculator or nothing
+/// poem or a calculator or nothing
 /// how lovely can it be?
 /// ```
 /// Using this library, you can run it with a program that looked like this:
