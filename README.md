@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/shnewto/ashpaper.svg?branch=master)](https://travis-ci.org/shnewto/ashpaper)
-[![codecov](https://codecov.io/gh/shnewto/ashpaper/branch/master/graph/badge.svg)](https://codecov.io/gh/shnewto/ashpaper)
+[![Coverage Status](https://coveralls.io/repos/github/shnewto/ashpaper/badge.svg?branch=master)](https://coveralls.io/github/shnewto/ashpaper?branch=master)
 [![Crates.io Version](https://img.shields.io/crates/v/ashpaper.svg)](https://crates.io/crates/ashpaper)
 [![Crates.io](https://img.shields.io/crates/d/ashpaper.svg)](https://crates.io/crates/ashpaper)
 
@@ -28,8 +28,8 @@ Here are the instructions at your disposal (in order that they get precedence):
 - _Everything else_: Store number of syllables in the line to the active register.
 
 
-Let's take this poem in a file called lovely-poem.eso.This poem-program (poegram?) calculates factorials and input in the number of syllables in the title. (I learned a lot from reading the poem "other woodwork" by William Hicks)
-```ignore
+Let's take this poem in a file called `lovely-poem.eso`.This poem-program (poegram?) calculates factorials and input in the number of syllables in the title. (I learned a lot from reading the poem "other woodwork" by William Hicks)
+```txt
 lovely poem
 
   it is a calculator, like a
@@ -66,9 +66,42 @@ pub fn main() {
 }
 ```
 
-And it will print the following to stdout:
-```ignore
+And it will produce the following String:
+```txt
 24
+```
+
+When `RUST_LOG=info` is set and the caller initializes logging, you can get at program evaluation info. Here's what `lovely-poem.eso` looks like.
+```txt
+instruction                                         |  r0  |  r1  |  stack
+--------------------------------------------------- | ---- | ---- | -------
+lovely poem                                         |  4   |  0   | []
+                                                    |  4   |  0   | []
+  it is a calculator, like a                        |  4   |  4   | []
+      poem, is a poem, and finds                    |  4   |  4   | []
+        factori-                                    |  4   |  4   | [4]
+          als                                       |  4   |  1   | [4]
+  The input is the syllAbles                        |  4   |  -1  | [4]
+in the title, count them, as one counts             |  3   |  -1  | [4]
+  (q) what other poem, programs can be writ         |  3   |  4   | []
+  (a) anything a Turing                             |  3   |  12  | []
+    machine-machine-machine                         |  3   |  12  | [12]
+    would do                                        |  3   |  2   | [12]
+  it is a calculator, like a                        |  3   |  5   | [12]
+      poem, is a poem, and finds                    |  3   |  12  | []
+        factori-                                    |  3   |  12  | [12]
+          als                                       |  3   |  1   | [12]
+  The input is the syllAbles                        |  3   |  -1  | [12]
+in the title, count them, as one counts             |  2   |  -1  | [12]
+  (q) what other poem, programs can be writ         |  2   |  12  | []
+  (a) anything a Turing                             |  2   |  24  | []
+    machine-machine-machine                         |  2   |  24  | [24]
+    would do                                        |  2   |  2   | [24]
+re/cur                                              |  2   |  2   | [24]
+    sion works too, in poems, programs, and this    |  2   |  24  | []
+       a lovely.                                    |  2   |  24  | []
+poem or a calculator or nothing                     |  10  |  24  | []
+how lovely can it be?                               |  10  |  24  | []
 ```
 
 ## Some caveats about compliance with the informal spec

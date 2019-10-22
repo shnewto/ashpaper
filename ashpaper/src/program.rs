@@ -1,4 +1,5 @@
 extern crate pest;
+extern crate log;
 
 use pest::Parser;
 use std::io::{self, BufRead};
@@ -120,6 +121,9 @@ pub fn execute(program: &str) -> Result<String, ()> {
         .collect::<Result<Vec<Instructions>, _>>()?;
     let mut instruction_pointer: usize = 0;
 
+    log::info!("{: <51} | {: ^4} | {: ^4} | {: ^7}", "instruction", "r0", "r1", "stack");
+    log::info!("{:-<51} | {:-^4} | {:-^4} | {:-^7}", "", "", "", "");
+
     'outer: while let Some(instruction) = instructions.get(instruction_pointer) {
         let syllables = i64::from(wordsworth::syllable_counter(instruction.as_str()));
 
@@ -168,6 +172,8 @@ pub fn execute(program: &str) -> Result<String, ()> {
                 _ => {}
             }
         }
+        log::info!("{: <51} | {: ^4} | {: ^4} | {:^?}", instruction.as_str(), mem.register0, mem.register1, mem.stack);
+
         instruction_pointer += 1;
     }
 

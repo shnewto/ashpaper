@@ -38,9 +38,11 @@
 /// ```
 extern crate ashpaper;
 extern crate clap;
-use clap::App;
+extern crate log;
 
+use clap::App;
 use std::fs;
+
 
 #[cfg_attr(tarpaulin, skip)]
 pub fn main() {
@@ -50,6 +52,8 @@ pub fn main() {
         .about("An AshPaper interpreter that executes poetry!")
         .args_from_usage("<INPUT>    '.eso file to compile'")
         .get_matches();
+
+    env_logger::init();
 
     let fname = matches.value_of("INPUT").unwrap();
     let contents = fs::read_to_string(fname).expect("Something went wrong reading input file!");
