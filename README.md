@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/shnewto/ashpaper.svg?branch=master)](https://travis-ci.org/shnewto/ashpaper)
-[![codecov](https://codecov.io/gh/shnewto/ashpaper/branch/master/graph/badge.svg)](https://codecov.io/gh/shnewto/ashpaper)
+[![Coverage Status](https://coveralls.io/repos/github/shnewto/ashpaper/badge.svg?branch=master)](https://coveralls.io/github/shnewto/ashpaper?branch=master)
 [![Crates.io Version](https://img.shields.io/crates/v/ashpaper.svg)](https://crates.io/crates/ashpaper)
 [![Crates.io](https://img.shields.io/crates/d/ashpaper.svg)](https://crates.io/crates/ashpaper)
 
