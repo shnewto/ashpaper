@@ -38,7 +38,7 @@ And it will produce the String:
 24
 ```
 
-Set `RUST_LOG=info` for program evaluation output. For `lovely-poem.eso` you'd see:
+When `RUST_LOG=info` (`RUST_LOG=info ashpaper lovely-poem.eso`) is set, you can get at program evaluation info. Here's what lovely-poem.eso looks like.
 ```txt
 instruction                                         |  r0  |  r1  |  stack
 --------------------------------------------------- | ---- | ---- | -------
