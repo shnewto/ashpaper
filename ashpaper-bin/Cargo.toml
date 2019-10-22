@@ -14,12 +14,11 @@ readme = "README.md"
 keywords = ["esolang", "esopo", "poetry", "interpreter", "cli"]
 
 [[bin]]
-name = "ashpaper-bin"
+name = "ashpaper"
 path = "src/main.rs"
 
 [dependencies.ashpaper]
-# version = "0.2.4"
-path = "../ashpaper/"
+version = "0.2.5"
 
 [dependencies]
 clap = "2.33.0"
