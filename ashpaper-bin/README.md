@@ -38,7 +38,7 @@ And it will print the following to stdout:
 24
 ```
 
-When `RUST_LOG=info` (`RUST_LOG=info ashpaper lovely-poem.eso`) is set, you can get at program evaluation info. Here's what lovely-poem.eso looks like.
+When `RUST_LOG=info` is set (i.e., running `RUST_LOG=info ashpaper lovely-poem.eso`), you can get at program evaluation info. Here's what lovely-poem.eso looks like.
 ```txt
 instruction                                         |  r0  |  r1  |  stack
 --------------------------------------------------- | ---- | ---- | -------
