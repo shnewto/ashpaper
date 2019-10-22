@@ -38,5 +38,38 @@ And it will produce the output:
 24
 ```
 
+Set `RUST_LOG=info` for program evaluation output. For `lovely-poem.eso` you'd see:
+```txt
+instruction                                         |  r0  |  r1  |  stack
+--------------------------------------------------- | ---- | ---- | -------
+                                                    |  0   |  0   | []
+lovely poem                                         |  4   |  0   | []
+                                                    |  4   |  0   | []
+  it is a calculator, like a                        |  4   |  4   | []
+      poem, is a poem, and finds                    |  4   |  4   | []
+        factori-                                    |  4   |  4   | [4]
+          als                                       |  4   |  1   | [4]
+  The input is the syllAbles                        |  4   |  -1  | [4]
+in the title, count them, as one counts             |  3   |  -1  | [4]
+  (q) what other poem, programs can be writ         |  3   |  4   | []
+  (a) anything a Turing                             |  3   |  12  | []
+    machine-machine-machine                         |  3   |  12  | [12]
+    would do                                        |  3   |  2   | [12]
+  it is a calculator, like a                        |  3   |  5   | [12]
+      poem, is a poem, and finds                    |  3   |  12  | []
+        factori-                                    |  3   |  12  | [12]
+          als                                       |  3   |  1   | [12]
+  The input is the syllAbles                        |  3   |  -1  | [12]
+in the title, count them, as one counts             |  2   |  -1  | [12]
+  (q) what other poem, programs can be writ         |  2   |  12  | []
+  (a) anything a Turing                             |  2   |  24  | []
+    machine-machine-machine                         |  2   |  24  | [24]
+    would do                                        |  2   |  2   | [24]
+re/cur                                              |  2   |  2   | [24]
+    sion works too, in poems, programs, and this    |  2   |  24  | []
+       a lovely.                                    |  2   |  24  | []
+poem or a calculator or nothing                     |  10  |  24  | []
+how lovely can it be?                               |  10  |  24  | []
+```
 ## Issues
 This project is really bare bones atm, if you find something broken, please raise an issue :heart: :heart:
