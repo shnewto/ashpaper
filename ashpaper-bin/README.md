@@ -33,7 +33,7 @@ You can run it with:
 ashpaper lovely-poem.eso
 ```
 
-And it will produce the output:
+And it will produce the String:
 ```
 24
 ```
@@ -42,7 +42,6 @@ Set `RUST_LOG=info` for program evaluation output. For `lovely-poem.eso` you'd s
 ```txt
 instruction                                         |  r0  |  r1  |  stack
 --------------------------------------------------- | ---- | ---- | -------
-                                                    |  0   |  0   | []
 lovely poem                                         |  4   |  0   | []
                                                     |  4   |  0   | []
   it is a calculator, like a                        |  4   |  4   | []

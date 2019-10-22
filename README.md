@@ -29,7 +29,7 @@ Here are the instructions at your disposal (in order that they get precedence):
 
 
 Let's take this poem in a file called `lovely-poem.eso`.This poem-program (poegram?) calculates factorials and input in the number of syllables in the title. (I learned a lot from reading the poem "other woodwork" by William Hicks)
-```ignore
+```txt
 lovely poem
 
   it is a calculator, like a
@@ -67,7 +67,7 @@ pub fn main() {
 ```
 
 And it will print the following to stdout:
-```ignore
+```txt
 24
 ```
 
@@ -75,7 +75,6 @@ When `RUST_LOG=info` is set and the caller initializes logging, you can get at p
 ```txt
 instruction                                         |  r0  |  r1  |  stack
 --------------------------------------------------- | ---- | ---- | -------
-                                                    |  0   |  0   | []
 lovely poem                                         |  4   |  0   | []
                                                     |  4   |  0   | []
   it is a calculator, like a                        |  4   |  4   | []

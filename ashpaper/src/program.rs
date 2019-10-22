@@ -123,7 +123,6 @@ pub fn execute(program: &str) -> Result<String, ()> {
 
     log::info!("{: <51} | {: ^4} | {: ^4} | {: ^7}", "instruction", "r0", "r1", "stack");
     log::info!("{:-<51} | {:-^4} | {:-^4} | {:-^7}", "", "", "", "");
-    log::info!("{: <51} | {: ^4} | {: ^4} | {:^?}", "", mem.register0, mem.register1, mem.stack);
 
     'outer: while let Some(instruction) = instructions.get(instruction_pointer) {
         let syllables = i64::from(wordsworth::syllable_counter(instruction.as_str()));
