@@ -4,6 +4,7 @@ extern crate log;
 use pest::Parser;
 use std::io::{self, BufRead};
 use wordsworth;
+use super::error::Error;
 
 type Instructions<'a> = pest::iterators::Pair<'a, Rule>;
 
@@ -103,10 +104,6 @@ fn parse(line: &str) -> Result<Instructions, ()> {
 }
 
 // TODO: define actual error types instead of `()`
-// TODO (maybe?): instead of printing output of execution,
-// accumulate into a String which is returned in the Result.
-// This would make the output more useable via the API,
-// but I haven't read the paper yet so maybe that's a bad idea.
 pub fn execute(program: &str) -> Result<String, ()> {
     let cursor = io::Cursor::new(program);
     let lines = cursor.lines().map(|l| l.unwrap()).collect::<Vec<String>>();
@@ -172,6 +169,7 @@ pub fn execute(program: &str) -> Result<String, ()> {
                 _ => {}
             }
         }
+
         log::info!("{: <51} | {: ^4} | {: ^4} | {:^?}", instruction.as_str(), mem.register0, mem.register1, mem.stack);
 
         instruction_pointer += 1;

@@ -72,3 +72,5 @@ extern crate pest;
 extern crate pest_derive;
 extern crate wordsworth;
 pub mod program;
+mod error;
+pub use error::Error;
