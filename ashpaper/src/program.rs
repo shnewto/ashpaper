@@ -96,15 +96,15 @@ impl Memory {
 }
 
 // TODO: define actual error types instead of `()`
-fn parse(line: &str) -> Result<Instructions, ()> {
+fn parse(line: &str) -> Result<Instructions, Error> {
     AshPaper::parse(Rule::program, line)
-        .map_err(|_| ())? // ignore pest's custom error type
+        .map_err(|e| Error::from(e))?
         .next()
-        .ok_or(())
+        .ok_or(Error::ParseError("No instructions in program".to_string()))
 }
 
 // TODO: define actual error types instead of `()`
-pub fn execute(program: &str) -> Result<String, ()> {
+pub fn execute(program: &str) -> Result<String, Error> {
     let cursor = io::Cursor::new(program);
     let lines = cursor.lines().map(|l| l.unwrap()).collect::<Vec<String>>();
 
@@ -115,7 +115,8 @@ pub fn execute(program: &str) -> Result<String, ()> {
     let instructions = lines
         .iter()
         .map(|line| parse(line))
-        .collect::<Result<Vec<Instructions>, _>>()?;
+        .collect::<Result<Vec<_>, _>>()?;
+
     let mut instruction_pointer: usize = 0;
 
     log::info!("{: <51} | {: ^4} | {: ^4} | {: ^7}", "instruction", "r0", "r1", "stack");

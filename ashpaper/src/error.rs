@@ -1,12 +1,13 @@
-// use nom::{error::ErrorKind, Err, Needed};
+use pest;
+use::program;
 use std::error;
 use std::fmt;
 use std::str;
 
 #[derive(PartialEq, Debug, Clone)]
 pub enum Error {
-    InputError(String),
     ParseError(String),
+    InputError(String),
 }
 
 impl fmt::Display for Error {
@@ -24,15 +25,18 @@ impl error::Error for Error {
     }
 }
 
-// impl<'a> From<Err<(&'a [u8], ErrorKind)>> for Error {
-//     fn from(err: Err<(&[u8], ErrorKind)>) -> Self {
-//         match err {
-//             Err::Incomplete(n) => Error::from(n),
-//             Err::Error(e) => Error::from(e),
-//             Err::Failure(e) => Error::from(e),
-//         }
-//     }
-// }
+impl From<pest::error::Error<program::Rule>> for Error {
+    fn from(err: pest::error::Error<program::Rule>) -> Self {
+        match err.variant {
+            pest::error::ErrorVariant::ParsingError { .. } => {
+                Error::ParseError("TODO".to_string())
+                }
+            pest::error::ErrorVariant::CustomError { ref message } => {
+                Error::ParseError(message.to_string())
+            }
+        }
+    }
+}
 
 // impl<'a> From<(&'a [u8], ErrorKind)> for Error {
 //     fn from(err: (&[u8], ErrorKind)) -> Self {
