@@ -30,7 +30,7 @@ how lovely can it be?
 
 You can run it with:
 ```
-ashpaper-bin lovely-poem.eso
+ashpaper lovely-poem.eso
 ```
 
 And it will produce the output:
