@@ -33,7 +33,7 @@ You can run it with:
 ashpaper lovely-poem.eso
 ```
 
-And it will produce the String:
+And it will print the following to stdout:
 ```
 24
 ```

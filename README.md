@@ -66,7 +66,7 @@ pub fn main() {
 }
 ```
 
-And it will print the following to stdout:
+And it will produce the following String:
 ```txt
 24
 ```
