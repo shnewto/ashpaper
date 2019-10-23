@@ -43,11 +43,10 @@ extern crate log;
 use clap::App;
 use std::fs;
 
-
 #[cfg_attr(tarpaulin, skip)]
 pub fn main() {
     let matches = App::new("ashpaper")
-        .version("0.2.0")
+        .version("0.2.1")
         .author("Shea Newton <shnewto@gmail.com>")
         .about("An AshPaper interpreter that executes poetry!")
         .args_from_usage("<INPUT>    '.eso file to compile'")
