@@ -451,4 +451,11 @@ how lovely can it be?
         let five_factorial_res = "120\n".to_string();
         assert_eq!(execute(&five_factorial), Ok(five_factorial_res));
     }
+
+    #[test]
+    fn logging() {
+        // everything should work as expected if logging is enabled.
+        std::env::set_var("RUST_LOG", "info");
+        factorial();
+    }
 }
