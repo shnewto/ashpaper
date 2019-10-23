@@ -4,7 +4,7 @@ description = "Rust Inpterpreter for Esopo language AshPaper conceived by Willia
 
 authors = ["Shea Newton <shnewto@gmail.com>", "@CrockAgile"]
 
-version = "0.2.5"
+version = "0.3.0"
 license = "MIT"
 
 homepage = "https://github.com/shnewto/ashpaper"
