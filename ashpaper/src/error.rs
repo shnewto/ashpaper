@@ -40,5 +40,41 @@ impl From<std::io::Error> for Error {
 
 #[cfg(test)]
 mod tests {
-    // None of these errors should be possible... how can we "test" them?
+    use super::*;
+
+    #[test]
+    fn display() {
+        let parse = "parse error".to_string();
+        let input = "input error".to_string();
+        let progam = "program error".to_string();
+
+        assert_eq!(parse, format!("{}", Error::ParseError(parse.clone())));
+        assert_eq!(input, format!("{}", Error::ParseError(input.clone())));
+        assert_eq!(progam, format!("{}", Error::ParseError(progam.clone())));
+    }
+
+    #[test]
+    fn io_err() {
+        let err_str = "IO Errored!";
+        let error = std::io::Error::new(std::io::ErrorKind::Other, err_str);
+
+        assert_eq!(err_str.to_string(), format!("{}", Error::from(error)));
+    }
+
+    #[test]
+    fn pest_err() {
+        let err_str = " --> 1:1\n  |\n1 | \n  | ^---\n  |\n  = unexpected pop; expected push";
+
+        let input = "";
+        let pos = pest::Position::from_start(input);
+        let error = pest::error::Error::new_from_pos(
+            pest::error::ErrorVariant::ParsingError {
+                positives: vec![Rule::push],
+                negatives: vec![Rule::pop],
+            },
+            pos,
+        );
+
+        assert_eq!(err_str.to_string(), format!("{}", Error::from(error)));
+    }
 }
