@@ -1,10 +1,10 @@
-extern crate pest;
 extern crate log;
+extern crate pest;
 
+use super::error::Error;
 use pest::Parser;
 use std::io::{self, BufRead};
 use wordsworth;
-use super::error::Error;
 
 type Instructions<'a> = pest::iterators::Pair<'a, Rule>;
 
@@ -95,18 +95,16 @@ impl Memory {
     }
 }
 
-// TODO: define actual error types instead of `()`
 fn parse(line: &str) -> Result<Instructions, Error> {
     AshPaper::parse(Rule::program, line)
-        .map_err(|e| Error::from(e))?
+        .map_err(|e| e)?
         .next()
-        .ok_or(Error::ParseError("No instructions in program".to_string()))
+        .ok_or_else(|| Error::ProgramError("No instructions to execute.".to_string()))
 }
 
-// TODO: define actual error types instead of `()`
 pub fn execute(program: &str) -> Result<String, Error> {
     let cursor = io::Cursor::new(program);
-    let lines = cursor.lines().map(|l| l.unwrap()).collect::<Vec<String>>();
+    let lines = cursor.lines().collect::<Result<Vec<_>, _>>()?;
 
     let mut mem = Memory::new();
 
@@ -119,7 +117,13 @@ pub fn execute(program: &str) -> Result<String, Error> {
 
     let mut instruction_pointer: usize = 0;
 
-    log::info!("{: <51} | {: ^4} | {: ^4} | {: ^7}", "instruction", "r0", "r1", "stack");
+    log::info!(
+        "{: <51} | {: ^4} | {: ^4} | {: ^7}",
+        "instruction",
+        "r0",
+        "r1",
+        "stack"
+    );
     log::info!("{:-<51} | {:-^4} | {:-^4} | {:-^7}", "", "", "", "");
 
     'outer: while let Some(instruction) = instructions.get(instruction_pointer) {
@@ -171,7 +175,13 @@ pub fn execute(program: &str) -> Result<String, Error> {
             }
         }
 
-        log::info!("{: <51} | {: ^4} | {: ^4} | {:^?}", instruction.as_str(), mem.register0, mem.register1, mem.stack);
+        log::info!(
+            "{: <51} | {: ^4} | {: ^4} | {:^?}",
+            instruction.as_str(),
+            mem.register0,
+            mem.register1,
+            mem.stack
+        );
 
         instruction_pointer += 1;
     }
