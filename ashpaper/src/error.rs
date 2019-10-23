@@ -3,7 +3,7 @@ use std::error;
 use std::fmt;
 use std::str;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Error {
     ParseError(String),
     InputError(String),
