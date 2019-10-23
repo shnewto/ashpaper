@@ -1,6 +1,7 @@
-extern crate pest;
 extern crate log;
+extern crate pest;
 
+use error::Error;
 use pest::Parser;
 use std::io::{self, BufRead};
 use wordsworth;
@@ -94,22 +95,16 @@ impl Memory {
     }
 }
 
-// TODO: define actual error types instead of `()`
-fn parse(line: &str) -> Result<Instructions, ()> {
+fn parse(line: &str) -> Result<Instructions, Error> {
     AshPaper::parse(Rule::program, line)
-        .map_err(|_| ())? // ignore pest's custom error type
+        .map_err(|e| e)?
         .next()
-        .ok_or(())
+        .ok_or_else(|| Error::ProgramError("No instructions to execute.".to_string()))
 }
 
-// TODO: define actual error types instead of `()`
-// TODO (maybe?): instead of printing output of execution,
-// accumulate into a String which is returned in the Result.
-// This would make the output more useable via the API,
-// but I haven't read the paper yet so maybe that's a bad idea.
-pub fn execute(program: &str) -> Result<String, ()> {
+pub fn execute(program: &str) -> Result<String, Error> {
     let cursor = io::Cursor::new(program);
-    let lines = cursor.lines().map(|l| l.unwrap()).collect::<Vec<String>>();
+    let lines = cursor.lines().collect::<Result<Vec<_>, _>>()?;
 
     let mut mem = Memory::new();
 
@@ -118,10 +113,17 @@ pub fn execute(program: &str) -> Result<String, ()> {
     let instructions = lines
         .iter()
         .map(|line| parse(line))
-        .collect::<Result<Vec<Instructions>, _>>()?;
+        .collect::<Result<Vec<_>, _>>()?;
+
     let mut instruction_pointer: usize = 0;
 
-    log::info!("{: <51} | {: ^4} | {: ^4} | {: ^7}", "instruction", "r0", "r1", "stack");
+    log::info!(
+        "{: <51} | {: ^4} | {: ^4} | {: ^7}",
+        "instruction",
+        "r0",
+        "r1",
+        "stack"
+    );
     log::info!("{:-<51} | {:-^4} | {:-^4} | {:-^7}", "", "", "", "");
 
     'outer: while let Some(instruction) = instructions.get(instruction_pointer) {
@@ -172,7 +174,14 @@ pub fn execute(program: &str) -> Result<String, ()> {
                 _ => {}
             }
         }
-        log::info!("{: <51} | {: ^4} | {: ^4} | {:^?}", instruction.as_str(), mem.register0, mem.register1, mem.stack);
+
+        log::info!(
+            "{: <51} | {: ^4} | {: ^4} | {:^?}",
+            instruction.as_str(),
+            mem.register0,
+            mem.register1,
+            mem.stack
+        );
 
         instruction_pointer += 1;
     }
@@ -441,5 +450,12 @@ how lovely can it be?
         let five_factorial = format!("lovely poem and\n{}", factorial_program);
         let five_factorial_res = "120\n".to_string();
         assert_eq!(execute(&five_factorial), Ok(five_factorial_res));
+    }
+
+    #[test]
+    fn logging() {
+        // everything should work as expected if logging is enabled.
+        std::env::set_var("RUST_LOG", "info");
+        factorial();
     }
 }
