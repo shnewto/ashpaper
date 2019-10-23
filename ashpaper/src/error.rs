@@ -20,12 +20,6 @@ impl fmt::Display for Error {
     }
 }
 
-impl error::Error for Error {
-    fn description(&self) -> &str {
-        "AshPaper error"
-    }
-}
-
 impl From<pest::error::Error<Rule>> for Error {
     fn from(err: pest::error::Error<Rule>) -> Self {
         Error::ParseError(format!("{}", err))
@@ -49,8 +43,8 @@ mod tests {
         let progam = "program error".to_string();
 
         assert_eq!(parse, format!("{}", Error::ParseError(parse.clone())));
-        assert_eq!(input, format!("{}", Error::ParseError(input.clone())));
-        assert_eq!(progam, format!("{}", Error::ParseError(progam.clone())));
+        assert_eq!(input, format!("{}", Error::InputError(input.clone())));
+        assert_eq!(progam, format!("{}", Error::ProgramError(progam.clone())));
     }
 
     #[test]
