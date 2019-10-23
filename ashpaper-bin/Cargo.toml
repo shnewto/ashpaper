@@ -4,7 +4,7 @@ description = "CLI for ashpaper, an inpterpreter for Esopo language AshPaper con
 
 authors = ["Shea Newton <shnewto@gmail.com>"]
 
-version = "0.2.0"
+version = "0.2.1"
 license = "MIT"
 
 homepage = "https://github.com/shnewto/ashpaper"
@@ -18,7 +18,7 @@ name = "ashpaper"
 path = "src/main.rs"
 
 [dependencies]
-ashpaper = { path = "../ashpaper", version = "0.2.5"}
+ashpaper = { path = "../ashpaper", version = "0.3.0" }
 clap = "2.33.0"
 log = "0.4.0"
 env_logger = "0.7.1"
