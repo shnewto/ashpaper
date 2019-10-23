@@ -51,10 +51,9 @@
 ///poem or a calculator or nothing
 ///how lovely can it be?
 ///                    ";
-///    if let Ok(res) = ashpaper::program::execute(&contents) {
-///        print!("{}", res);
-///    } else {
-///        eprintln!("Error executing program!");
+///    match ashpaper::program::execute(&contents) {
+///        Ok(res) => print!("{}", res),
+///        Err(e) => eprintln!("{}", e),
 ///    }
 /// }
 /// ```
