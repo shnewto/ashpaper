@@ -1,7 +1,5 @@
 use program::Rule;
-use std::error;
 use std::fmt;
-use std::str;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Error {
