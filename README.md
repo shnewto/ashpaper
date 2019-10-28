@@ -4,7 +4,7 @@
 [![Crates.io](https://img.shields.io/crates/d/ashpaper.svg)](https://crates.io/crates/ashpaper)
 
 # AshPaper
-An inpterpreter for the Esopo language AshPaper conceived by [William Hicks](https://github.com/wphicks). You can read about it and the Esopo project n Willian Hick's own words [here](https://wphicks.github.io/esopo/). Daniel Temkin also wrote about it on esoteric.codes, you can read that [here](https://esoteric.codes/blog/esopo-turing-complete-poetry). And of course the spec! Checkout that out [here](https://github.com/wphicks/Esopo/blob/master/AshPaper/informal_specs.txt).
+An inpterpreter for the Esopo language AshPaper conceived by [William Hicks](https://github.com/wphicks). You can read about it and the Esopo project in Willian Hick's own words [here](https://wphicks.github.io/esopo/). Daniel Temkin also wrote about it on esoteric.codes, you can read that [here](https://esoteric.codes/blog/esopo-turing-complete-poetry). And of course the spec! Checkout that out [here](https://github.com/wphicks/Esopo/blob/master/AshPaper/informal_specs.txt).
 
 ## How it works
 
@@ -28,7 +28,7 @@ Here are the instructions at your disposal (in order that they get precedence):
 - _Everything else_: Store number of syllables in the line to the active register.
 
 
-Let's take this poem in a file called `lovely-poem.eso`.This poem-program (poegram?) calculates factorials and input in the number of syllables in the title. (I learned a lot from reading the poem "other woodwork" by William Hicks)
+Let's take this poem in a file called `lovely-poem.eso`. This poem-program (poegram‽) calculates factorials and input in the number of syllables in the title. (I learned a lot from reading the poem "other woodwork" by William Hicks)
 ```txt
 lovely poem
 
@@ -103,5 +103,5 @@ how lovely can it be?                               |  10  |  24  | []
 ```
 
 ## Some caveats about compliance with the informal spec
-- It's entirely possible at this point that some of my implementation deviates from the spec in unintended ways. If you spot anything like that, please raise an issue :heart: :heart:
+- It is possible at this point that my implementation deviates from the spec in unintended ways. If you spot anything like that, please raise an issue :heart: :heart:
 - The alliteration and rhyming rules are still unimplemented.
