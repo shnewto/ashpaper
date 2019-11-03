@@ -30,8 +30,8 @@ script:
   - cargo run ashpaper-bin/poems/lovely-poem.eso
 
 after_success: |
-  sudo ldconfig &&
-  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
-    if ! [ -x "$(command -v cargo-tarpaulin)" ]; then then cargo install --debug cargo-tarpaulin; fi &&
-    cargo tarpaulin --ignore-tests --out Xml --ciserver travis-ci --coveralls $TRAVIS_JOB_ID
-  fi
+  - export PATH=$HOME/.cargo/bin:$PATH
+  - if [ ! -f $HOME/.cargo/bin/cargo-coveralls ]; then
+      cargo install cargo-travis;
+    fi
+  - cargo coveralls
