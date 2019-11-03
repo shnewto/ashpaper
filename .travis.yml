@@ -29,9 +29,8 @@ script:
   - cargo test --verbose --all
   - cargo run ashpaper-bin/poems/lovely-poem.eso
 
-after_success: |
-  - export PATH=$HOME/.cargo/bin:$PATH
+after_success:
   - if [ ! -f $HOME/.cargo/bin/cargo-coveralls ]; then
-      cargo install cargo-travis;
+      cargo install --debug cargo-travis;
     fi
   - cargo coveralls
