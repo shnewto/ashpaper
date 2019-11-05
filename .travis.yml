@@ -1,4 +1,4 @@
-sudo: true
+sudo: false
 language: rust
 cache: cargo
 rust:
@@ -10,15 +10,9 @@ matrix:
     - rust: nightly
 
 addons:
-  apt:
-    packages:
-      - libcurl4-openssl-dev
-      - libelf-dev
-      - libdw-dev
-      - binutils-dev
-      - cmake
-    sources:
-      - kalakris-cmake
+    apt:
+        packages:
+            - libssl-dev
 
 branches:
   only:
@@ -29,8 +23,8 @@ script:
   - cargo test --verbose --all
   - cargo run ashpaper-bin/poems/lovely-poem.eso
 
-after_success:
-  - if [ ! -f $HOME/.cargo/bin/cargo-coveralls ]; then
-      cargo install --debug cargo-travis;
-    fi
-  - cargo coveralls
+after_success: |
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+    if ! [ -x "$(command -v cargo-tarpaulin)" ]; then cargo install --debug cargo-tarpaulin; fi &&
+    cargo tarpaulin --ignore-tests --out Xml --ciserver travis-ci --coveralls $TRAVIS_JOB_ID
+  fi
