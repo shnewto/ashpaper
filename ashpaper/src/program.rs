@@ -139,6 +139,11 @@ impl FromStr for LineData {
     }
 }
 
+// register number to instruction pointer
+fn r_to_i_ptr(r: i64, instruction_count: usize) -> usize {
+    ((r.abs() as u64) % (instruction_count as u64)) as usize
+}
+
 pub fn execute(program: &str) -> Result<String, Error> {
     let cursor = io::Cursor::new(program);
     let lines = cursor.lines().collect::<Result<Vec<_>, _>>()?;
@@ -167,11 +172,7 @@ pub fn execute(program: &str) -> Result<String, Error> {
     let mut current: LineData;
 
     'outer: while let Some(instruction) = instructions.get(instruction_pointer) {
-        // 1. End rhyme with previous line: If register 0 < register 1, push the number of
-        // syllables present in the previous line to the stack. Otherwise, push the number of
-        // syllables in the current line to the stack.
         current = instruction.as_str().parse().unwrap();
-
         if rhyme(&current.end, &previous.end) {
             if mem.register0 < mem.register1 {
                 mem.store_syllables(previous.syllables);
@@ -179,8 +180,11 @@ pub fn execute(program: &str) -> Result<String, Error> {
                 mem.store_syllables(current.syllables);
             }
 
+            previous = current.clone();
             continue 'outer;
         }
+
+        previous = current.clone();
 
         let syllables = i64::from(wordsworth::syllable_counter(instruction.as_str()));
 
@@ -188,9 +192,7 @@ pub fn execute(program: &str) -> Result<String, Error> {
             match instruction.as_rule() {
                 Rule::goto => {
                     if mem.get_active() > syllables {
-                        instruction_pointer = ((mem.get_inactive().abs() as u64)
-                            % (instructions.len() as u64))
-                            as usize;
+                        instruction_pointer = r_to_i_ptr(mem.get_inactive(), instructions.len());
                         continue 'outer;
                     }
                 }
@@ -222,9 +224,17 @@ pub fn execute(program: &str) -> Result<String, Error> {
                 Rule::noop => {}
                 Rule::register0 => {
                     mem.active = Register::Register0;
+                    if alliteration(instruction.as_str()) {
+                        instruction_pointer = r_to_i_ptr(mem.get_active(), instructions.len());
+                        continue 'outer;
+                    }
                 }
                 Rule::register1 => {
                     mem.active = Register::Register1;
+                    if alliteration(instruction.as_str()) {
+                        instruction_pointer = r_to_i_ptr(mem.get_active(), instructions.len());
+                        continue 'outer;
+                    }
                 }
                 _ => {}
             }
@@ -238,7 +248,6 @@ pub fn execute(program: &str) -> Result<String, Error> {
             mem.stack
         );
 
-        previous = current.clone();
         instruction_pointer += 1;
     }
 
