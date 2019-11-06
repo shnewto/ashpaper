@@ -1,9 +1,12 @@
 extern crate log;
 extern crate pest;
+extern crate ttaw;
 
 use error::Error;
 use pest::Parser;
 use std::io::{self, BufRead};
+use std::str::FromStr;
+use ttaw::pronounciation::{alliteration, rhyme};
 use wordsworth;
 
 type Instructions<'a> = pest::iterators::Pair<'a, Rule>;
@@ -102,6 +105,40 @@ fn parse(line: &str) -> Result<Instructions, Error> {
         .ok_or_else(|| Error::ProgramError("No instructions to execute.".to_string()))
 }
 
+#[derive(Debug, Clone, Default)]
+struct LineData {
+    syllables: i64,
+    line: String,
+    end: String,
+}
+
+impl LineData {
+    fn new() -> LineData {
+        LineData {
+            syllables: 0,
+            line: String::new(),
+            end: String::new(),
+        }
+    }
+}
+
+impl FromStr for LineData {
+    type Err = Error;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut linedata = LineData::new();
+
+        linedata.line = s.to_string();
+
+        if let Some(end) = linedata.line.split_whitespace().last() {
+            linedata.end = end.to_string();
+        }
+
+        linedata.syllables = i64::from(wordsworth::syllable_counter(s));
+
+        Ok(linedata)
+    }
+}
+
 pub fn execute(program: &str) -> Result<String, Error> {
     let cursor = io::Cursor::new(program);
     let lines = cursor.lines().collect::<Result<Vec<_>, _>>()?;
@@ -126,7 +163,25 @@ pub fn execute(program: &str) -> Result<String, Error> {
     );
     log::info!("{:-<51} | {:-^4} | {:-^4} | {:-^7}", "", "", "", "");
 
+    let mut previous: LineData = LineData::new();
+    let mut current: LineData;
+
     'outer: while let Some(instruction) = instructions.get(instruction_pointer) {
+        // 1. End rhyme with previous line: If register 0 < register 1, push the number of
+        // syllables present in the previous line to the stack. Otherwise, push the number of
+        // syllables in the current line to the stack.
+        current = instruction.as_str().parse().unwrap();
+
+        if rhyme(&current.end, &previous.end) {
+            if mem.register0 < mem.register1 {
+                mem.store_syllables(previous.syllables);
+            } else {
+                mem.store_syllables(current.syllables);
+            }
+
+            continue 'outer;
+        }
+
         let syllables = i64::from(wordsworth::syllable_counter(instruction.as_str()));
 
         for instruction in instruction.clone().into_inner() {
@@ -183,6 +238,7 @@ pub fn execute(program: &str) -> Result<String, Error> {
             mem.stack
         );
 
+        previous = current.clone();
         instruction_pointer += 1;
     }
 
