@@ -14,7 +14,7 @@ You have two registers at your disposal, r0 and r1 which store signed integers (
 You also have an stack which can store signed integers (bounds are only that of `Vec<i64>`).
 
 Here are the instructions at your disposal (in order that they get precedence):
-- _End rhyme with previous line_: Unimplemented.
+-  _End rhyme with previous line_: Push number of syllables on to the stack. If register 0 < register 1, push the previous line's syllables, else push the current line's syllables.
 - Line contains `/`: If the value in the active register is greater than the number of syllables in the line, go to the line number that corresponds to the value in the **non-active** register. If abs(n) <= lines then n, else n % lines.
 - _Capital letter appears inside a word_: Negate the active register.
 - _Capital letter appears at the beginning of a word_: Multiply registers and store result in the active register.
@@ -23,7 +23,7 @@ Here are the instructions at your disposal (in order that they get precedence):
 - _Line contains `.`_: Print integer value of the active register.
 - _Line contains `,`_: Pop from the stack and store in the active register.
 - _Line contains `-`_: Push the value of the active register to the stack.
-- _Alleteration of consecutive words_: Unimplemented.
+- _Alliteration in consecutive words_: Go to the line number that corresponds to the value in the **active** register. If abs(n) <= lines then n, else n % lines.
 - _Blank line_: no-op.
 - _Everything else_: Store number of syllables in the line to the active register.
 
