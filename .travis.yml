@@ -20,15 +20,22 @@ addons:
       - kalakris-cmake
 
 before_script:
-  - export PATH=$HOME/.cargo/bin:$PATH
-  - if [ ! -f $HOME/.cargo/bin/cargo-coveralls ]; then
-      cargo install cargo-travis;
-    fi
+  - |
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+      export PATH=$HOME/.cargo/bin:$PATH &&
+      cargo install cargo-update || echo "cargo-update already installed" &&
+      cargo install cargo-travis || echo "cargo-travis already installed" &&
+      cargo install-update -a
+  fi
 
 script:
   - cargo build --verbose --all
   - cargo test --verbose --all
+  - cargo bench
   - cargo run ashpaper-bin/poems/lovely-poem.eso
 
 after_success:
-  - cargo coveralls
+  -|
+  if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
+    cargo coveralls
+  fi
