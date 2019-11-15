@@ -6,7 +6,7 @@ use error::Error;
 use pest::Parser;
 use std::io::{self, BufRead};
 use std::str::FromStr;
-use ttaw::pronounciation::{alliteration, rhyme};
+use ttaw::{alliteration, rhyme};
 use wordsworth;
 
 type Instructions<'a> = pest::iterators::Pair<'a, Rule>;
@@ -110,6 +110,7 @@ struct LineData {
     syllables: i64,
     line: String,
     end: String,
+    words: Vec<String>,
 }
 
 impl LineData {
@@ -118,6 +119,7 @@ impl LineData {
             syllables: 0,
             line: String::new(),
             end: String::new(),
+            words: vec![],
         }
     }
 }
@@ -134,6 +136,11 @@ impl FromStr for LineData {
         }
 
         linedata.syllables = i64::from(wordsworth::syllable_counter(s));
+
+        linedata.words = s
+            .split_whitespace()
+            .map(|w| w.to_string())
+            .collect::<Vec<String>>();
 
         Ok(linedata)
     }
@@ -173,7 +180,7 @@ pub fn execute(program: &str) -> Result<String, Error> {
 
     'outer: while let Some(instruction) = instructions.get(instruction_pointer) {
         current = instruction.as_str().parse().unwrap();
-        if rhyme(&current.end, &previous.end) {
+        if Ok(true) == rhyme(&current.end, &previous.end) {
             if mem.register0 < mem.register1 {
                 mem.store_syllables(previous.syllables);
             } else {
@@ -224,16 +231,30 @@ pub fn execute(program: &str) -> Result<String, Error> {
                 Rule::noop => {}
                 Rule::register0 => {
                     mem.active = Register::Register0;
-                    if alliteration(instruction.as_str()) {
-                        instruction_pointer = r_to_i_ptr(mem.get_active(), instructions.len());
-                        continue 'outer;
+                    let candidates = current
+                        .words
+                        .iter()
+                        .zip(current.words.get(1..).unwrap_or_default().iter());
+
+                    for (a, b) in candidates {
+                        if Ok(true) == alliteration(a, b) {
+                            instruction_pointer = r_to_i_ptr(mem.get_active(), instructions.len());
+                            continue 'outer;
+                        }
                     }
                 }
                 Rule::register1 => {
                     mem.active = Register::Register1;
-                    if alliteration(instruction.as_str()) {
-                        instruction_pointer = r_to_i_ptr(mem.get_active(), instructions.len());
-                        continue 'outer;
+                    let candidates = current
+                        .words
+                        .iter()
+                        .zip(current.words.get(1..).unwrap_or_default().iter());
+
+                    for (a, b) in candidates {
+                        if Ok(true) == alliteration(a, b) {
+                            instruction_pointer = r_to_i_ptr(mem.get_active(), instructions.len());
+                            continue 'outer;
+                        }
                     }
                 }
                 _ => {}
