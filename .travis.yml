@@ -25,6 +25,6 @@ script:
 
 after_success: |
   if [[ "$TRAVIS_RUST_VERSION" == stable ]]; then
-    git clone https://github.com/xd009642/tarpaulin.git ct && pushd ct && git checkout develop && cargo build && popd && 
+    pushd .. && git clone https://github.com/xd009642/tarpaulin.git ct && cd ct && git checkout develop && cargo build && popd && 
     ./ct/target/debug/cargo-tarpaulin tarpaulin --ignore-tests --out Xml --ciserver travis-ci --coveralls $TRAVIS_JOB_ID
   fi
