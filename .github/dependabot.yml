@@ -7,3 +7,12 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "daily"
+  - package-ecosystem: "cargo"
+    directory: "/ashpaper" # Location of package manifests
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "cargo"
+    directory: "/ashpaper-bin" # Location of package manifests
+    schedule:
+      interval: "daily"
+
