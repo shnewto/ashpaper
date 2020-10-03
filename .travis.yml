@@ -14,10 +14,6 @@ addons:
         packages:
             - libssl-dev
 
-branches:
-  only:
-  - master
-
 script:
   - |
     if [[ "$TRAVIS_RUST_VERSION" == stable ]]
