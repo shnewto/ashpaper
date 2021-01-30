@@ -1,4 +1,5 @@
 [![.github/workflows/ci.yml](https://github.com/shnewto/ashpaper/workflows/.github/workflows/ci.yml/badge.svg?branch=main)](https://github.com/shnewto/ashpaper/actions)
+[![codecov](https://codecov.io/gh/shnewto/ashpaper/branch/main/graph/badge.svg?token=koBLxpVvcw)](https://codecov.io/gh/shnewto/ashpaper)
 [![Crates.io Version](https://img.shields.io/crates/v/ashpaper.svg)](https://crates.io/crates/ashpaper)
 [![Crates.io](https://img.shields.io/crates/d/ashpaper.svg)](https://crates.io/crates/ashpaper)
 
