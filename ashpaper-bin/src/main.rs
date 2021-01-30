@@ -43,7 +43,7 @@ extern crate log;
 use clap::App;
 use std::fs;
 
-#[cfg_attr(tarpaulin, skip)]
+#[cfg(not(tarpaulin_include))]
 pub fn main() {
     let matches = App::new("ashpaper")
         .version(clap::crate_version!())
