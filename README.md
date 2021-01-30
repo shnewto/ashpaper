@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/shnewto/ashpaper.svg?branch=main)](https://travis-ci.org/shnewto/ashpaper)
-[![Coverage Status](https://coveralls.io/repos/github/shnewto/ashpaper/badge.svg?branch=main)](https://coveralls.io/github/shnewto/ashpaper?branch=main)
+[![.github/workflows/ci.yml](https://github.com/shnewto/ashpaper/workflows/.github/workflows/ci.yml/badge.svg?branch=main)](https://github.com/shnewto/ashpaper/actions)
 [![Crates.io Version](https://img.shields.io/crates/v/ashpaper.svg)](https://crates.io/crates/ashpaper)
 [![Crates.io](https://img.shields.io/crates/d/ashpaper.svg)](https://crates.io/crates/ashpaper)
 
