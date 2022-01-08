@@ -47,9 +47,9 @@ use std::fs;
 pub fn main() {
     let matches = App::new("ashpaper")
         .version(clap::crate_version!())
-        .author("Shea Newton <shnewto@gmail.com>")
+        .author(clap::crate_authors!())
         .about("An AshPaper interpreter that executes poetry!")
-        .args_from_usage("<INPUT>    '.eso file to compile'")
+        .arg(clap::arg!(<INPUT>    "'.eso file to compile'"))
         .get_matches();
 
     env_logger::init();
